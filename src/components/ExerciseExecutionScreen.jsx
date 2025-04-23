@@ -8,11 +8,13 @@ const ExerciseExecutionScreen = () => {
     completeExercise,
     skipExercise,
     previousExercise,
+    exitWorkout,
   } = useWorkout();
 
   const exercise = currentWorkout.exercises[currentExerciseIndex];
   const [timeLeft, setTimeLeft] = useState(exercise.duration);
   const [isPaused, setIsPaused] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   // Reset timer when exercise changes
   useEffect(() => {
@@ -42,9 +44,34 @@ const ExerciseExecutionScreen = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const confirmExit = () => {
+    exitWorkout();
+  };
+
+  const cancelExit = () => {
+    setShowExitConfirm(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-2xl mx-auto">
+        {/* Exit Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleExit}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Exit Workout
+          </button>
+        </div>
+
         {/* Progress Indicator */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
           <p className="text-center text-lg">
@@ -96,6 +123,32 @@ const ExerciseExecutionScreen = () => {
           </div>
         </div>
       </div>
+
+      {/* Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h2 className="text-xl font-bold mb-4">Exit Workout?</h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to exit? Your progress will not be saved.
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={confirmExit}
+                className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Exit
+              </button>
+              <button
+                onClick={cancelExit}
+                className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Continue Workout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

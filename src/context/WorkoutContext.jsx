@@ -113,6 +113,17 @@ export const WorkoutProvider = ({ children }) => {
     }
   };
 
+  const exitWorkout = () => {
+    setCurrentWorkout(null);
+    setCurrentExerciseIndex(0);
+    setWorkoutProgress(0);
+    setIsResting(false);
+    setRestTimeLeft(20);
+    setIsWorkoutComplete(false);
+    setWorkoutStartTime(null);
+    setWorkoutEndTime(null);
+  };
+
   const getTotalWorkoutTime = () => {
     if (!workoutStartTime || !workoutEndTime) return 0;
     return Math.floor((workoutEndTime - workoutStartTime) / 1000);
@@ -139,6 +150,7 @@ export const WorkoutProvider = ({ children }) => {
     createWorkout,
     deleteWorkout,
     updateWorkout,
+    exitWorkout,
   };
 
   return (
