@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
+import { useNavigate } from 'react-router-dom';
+import ConfirmationModal from './ConfirmationModal';
 
-const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
-  const { workouts, deleteWorkout, mockWorkout } = useWorkout();
+const WorkoutPlanDashboard = () => {
+  const navigate = useNavigate();
+  const { workouts, deleteWorkout, startWorkout } = useWorkout();
   const [workoutToDelete, setWorkoutToDelete] = useState(null);
+
+  // Default workout template
+  const defaultWorkout = {
+    id: 'default',
+    name: 'Default Workout',
+    exercises: [
+      { id: 1, name: 'Push-ups', duration: 30 },
+      { id: 2, name: 'Squats', duration: 30 },
+      { id: 3, name: 'Plank', duration: 30 },
+    ]
+  };
 
   // Calculate total duration including rest periods
   const calculateWorkoutDuration = (exercises) => {
@@ -34,22 +48,42 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
     setWorkoutToDelete(null);
   };
 
-  // Weekly schedule
-  const workoutDays = [
-    { id: 1, name: 'Sunday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-    { id: 2, name: 'Monday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-    { id: 3, name: 'Tuesday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-    { id: 4, name: 'Wednesday', isRestDay: true, completed: false },
-    { id: 5, name: 'Thursday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-    { id: 6, name: 'Friday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-    { id: 7, name: 'Saturday', exercises: mockWorkout.exercises, isRestDay: false, completed: false },
-  ];
+  const handleStartWorkout = (workoutId) => {
+    let workoutToStart;
+    
+    // Check if it's a custom workout
+    if (workouts) {
+      workoutToStart = workouts.find(w => w.id === workoutId);
+    }
+    
+    // If not found in custom workouts, check if it's a daily workout
+    if (!workoutToStart) {
+      const dayWorkout = workoutDays.find(d => d.id === workoutId);
+      if (dayWorkout && !dayWorkout.isRestDay) {
+        workoutToStart = {
+          ...defaultWorkout,
+          id: workoutId,
+          name: `${dayWorkout.name}'s Workout`
+        };
+      }
+    }
 
-  const handleDayClick = (day) => {
-    if (!day.isRestDay) {
-      onStartWorkout(mockWorkout.id);
+    if (workoutToStart) {
+      startWorkout(workoutToStart);
+      navigate('/workout');
     }
   };
+
+  // Weekly schedule with default workout
+  const workoutDays = [
+    { id: 'sunday', name: 'Sunday', exercises: defaultWorkout.exercises, isRestDay: false, completed: false },
+    { id: 'monday', name: 'Monday', exercises: defaultWorkout.exercises, isRestDay: false, completed: false },
+    { id: 'tuesday', name: 'Tuesday', exercises: defaultWorkout.exercises, isRestDay: false, completed: false },
+    { id: 'wednesday', name: 'Wednesday', isRestDay: true, completed: false },
+    { id: 'thursday', name: 'Thursday', exercises: defaultWorkout.exercises, isRestDay: false, completed: false },
+    { id: 'friday', name: 'Friday', exercises: defaultWorkout.exercises, isRestDay: false, completed: false },
+    { id: 'saturday', name: 'Saturday', isRestDay: true, completed: false },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -58,7 +92,7 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Weekly Workout Plan</h1>
           <button
-            onClick={() => onNavigate('create')}
+            onClick={() => navigate('/create')}
             className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,7 +117,7 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
           {workoutDays.map((day) => (
             <div
               key={day.id}
-              onClick={() => handleDayClick(day)}
+              onClick={() => !day.isRestDay && handleStartWorkout(day.id)}
               className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-transform hover:scale-105 ${
                 day.isRestDay ? 'border-2 border-yellow-400 bg-yellow-50' : 'hover:shadow-lg'
               } ${!day.isRestDay && 'hover:border-blue-400 border-2 border-transparent'}`}
@@ -110,11 +144,11 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
         </div>
 
         {/* Custom Workouts */}
-        {workouts.length > 1 && (
+        {workouts && workouts.length > 0 && (
           <>
             <h2 className="text-2xl font-semibold mb-4">Custom Workouts</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {workouts.filter(w => w.id !== mockWorkout.id).map((workout) => (
+              {workouts.map((workout) => (
                 <div
                   key={workout.id}
                   className="bg-white rounded-lg shadow-md p-6 relative group"
@@ -123,7 +157,7 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        onNavigate('edit', workout);
+                        navigate('/edit', { state: { workout } });
                       }}
                       className="p-2 text-gray-400 hover:text-blue-600"
                       title="Edit workout"
@@ -144,12 +178,12 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
                   </div>
                   <h3 className="text-xl font-semibold mb-2">{workout.name}</h3>
                   <div className="text-gray-600 mb-4">
-                    <p>{workout.exercises.length} exercises</p>
+                    <p>{workout.exercises?.length || 0} exercises</p>
                     <p>{formatDuration(calculateWorkoutDuration(workout.exercises))}</p>
                   </div>
 
                   <button
-                    onClick={() => onStartWorkout(workout.id)}
+                    onClick={() => handleStartWorkout(workout.id)}
                     className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     Start Workout
@@ -161,30 +195,13 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
         )}
 
         {/* Delete Confirmation Modal */}
-        {workoutToDelete && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-              <h2 className="text-xl font-bold mb-4">Delete Workout?</h2>
-              <p className="text-gray-600 mb-6">
-                Are you sure you want to delete "{workoutToDelete.name}"? This action cannot be undone.
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={confirmDelete}
-                  className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={cancelDelete}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmationModal
+          isOpen={!!workoutToDelete}
+          onClose={cancelDelete}
+          onConfirm={confirmDelete}
+          title="Delete Workout?"
+          message={`Are you sure you want to delete "${workoutToDelete?.name}"? This action cannot be undone.`}
+        />
       </div>
     </div>
   );

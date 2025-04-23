@@ -19,6 +19,7 @@ const ExerciseExecutionScreen = () => {
   // Reset timer when exercise changes
   useEffect(() => {
     setTimeLeft(exercise.duration);
+    setIsPaused(false);
   }, [exercise]);
 
   useEffect(() => {
@@ -56,8 +57,18 @@ const ExerciseExecutionScreen = () => {
     setShowExitConfirm(false);
   };
 
+  const progress = ((currentExerciseIndex) / currentWorkout.exercises.length) * 100;
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-2 bg-gray-200">
+        <div
+          className="h-full bg-blue-600 transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+
       <div className="max-w-2xl mx-auto">
         {/* Exit Button */}
         <div className="flex justify-end mb-4">
@@ -83,19 +94,23 @@ const ExerciseExecutionScreen = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
           <h1 className="text-3xl font-bold text-center mb-4">{exercise.name}</h1>
           
-          {/* Exercise GIF/Image Placeholder */}
-          <div className="w-full h-64 bg-gray-200 rounded-lg mb-6 flex items-center justify-center">
-            <p className="text-gray-500">Exercise GIF/Image</p>
-          </div>
+          {exercise.gifUrl && (
+            <div className="flex justify-center mb-8">
+              <img
+                src={exercise.gifUrl}
+                alt={exercise.name}
+                className="max-w-full h-64 object-contain rounded-lg"
+              />
+            </div>
+          )}
 
-          {/* Timer */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-8">
             <div className="text-6xl font-bold text-blue-600">
               {formatTime(timeLeft)}
             </div>
+            <p className="text-gray-600 mt-2">remaining</p>
           </div>
 
-          {/* Controls */}
           <div className="flex justify-center space-x-4">
             <button
               onClick={previousExercise}
@@ -115,7 +130,10 @@ const ExerciseExecutionScreen = () => {
               {isPaused ? 'Resume' : 'Pause'}
             </button>
             <button
-              onClick={skipExercise}
+              onClick={() => {
+                skipExercise();
+                setTimeLeft(0);
+              }}
               className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
               Skip

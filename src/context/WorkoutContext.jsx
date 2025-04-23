@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { workoutService } from '../services/workoutService';
 
 const WorkoutContext = createContext();
 
 const LOCAL_STORAGE_KEY = 'workouts';
+const DEFAULT_REST_TIME = 20; // Default rest time in seconds
 
 // Mock workout data for initial development
 const mockWorkout = {
@@ -16,85 +19,123 @@ const mockWorkout = {
   defaultRestDuration: 20,
 };
 
+export const useWorkout = () => {
+  return useContext(WorkoutContext);
+};
+
 export const WorkoutProvider = ({ children }) => {
+  const { currentUser } = useAuth();
+  const [workouts, setWorkouts] = useState([]);
   const [currentWorkout, setCurrentWorkout] = useState(null);
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [workoutProgress, setWorkoutProgress] = useState(0);
-  const [isResting, setIsResting] = useState(false);
-  const [restTimeLeft, setRestTimeLeft] = useState(20);
-  const [isWorkoutComplete, setIsWorkoutComplete] = useState(false);
   const [workoutStartTime, setWorkoutStartTime] = useState(null);
   const [workoutEndTime, setWorkoutEndTime] = useState(null);
-  const [workouts, setWorkouts] = useState(() => {
-    const savedWorkouts = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return savedWorkouts ? JSON.parse(savedWorkouts) : [mockWorkout];
-  });
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [isResting, setIsResting] = useState(false);
+  const [isWorkoutComplete, setIsWorkoutComplete] = useState(false);
+  const [restTimeLeft, setRestTimeLeft] = useState(DEFAULT_REST_TIME);
+  const [workoutHistory, setWorkoutHistory] = useState([]);
 
+  // Load workouts from localStorage on mount
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(workouts));
+    const loadWorkouts = () => {
+      try {
+        const savedWorkouts = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedWorkouts) {
+          setWorkouts(JSON.parse(savedWorkouts));
+        }
+      } catch (error) {
+        console.error('Error loading workouts:', error);
+      }
+    };
+
+    loadWorkouts();
+  }, []);
+
+  // Save workouts to localStorage whenever they change
+  useEffect(() => {
+    if (workouts.length > 0) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(workouts));
+    }
   }, [workouts]);
 
-  const createWorkout = (workoutData) => {
-    const newWorkout = {
-      id: Date.now(),
-      ...workoutData,
-      defaultRestDuration: 20,
-    };
-    setWorkouts([...workouts, newWorkout]);
+  const loadUserWorkouts = async () => {
+    try {
+      const userWorkouts = await workoutService.getUserWorkouts(currentUser.uid);
+      setWorkouts(userWorkouts);
+    } catch (error) {
+      console.error('Error loading workouts:', error);
+    }
+  };
+
+  const loadWorkoutHistory = async () => {
+    try {
+      const history = await workoutService.getUserWorkoutHistory(currentUser.uid);
+      setWorkoutHistory(history);
+    } catch (error) {
+      console.error('Error loading workout history:', error);
+    }
+  };
+
+  const createWorkout = async (workoutData) => {
+    try {
+      const newWorkout = {
+        id: Date.now().toString(),
+        ...workoutData,
+        userId: currentUser?.uid
+      };
+      
+      setWorkouts(prevWorkouts => [...prevWorkouts, newWorkout]);
+      return newWorkout;
+    } catch (error) {
+      console.error('Error creating workout:', error);
+      throw error;
+    }
+  };
+
+  const updateWorkout = async (workoutId, updates) => {
+    try {
+      setWorkouts(prevWorkouts => 
+        prevWorkouts.map(workout => 
+          workout.id === workoutId 
+            ? { ...workout, ...updates }
+            : workout
+        )
+      );
+    } catch (error) {
+      console.error('Error updating workout:', error);
+      throw error;
+    }
   };
 
   const deleteWorkout = (workoutId) => {
-    setWorkouts(workouts.filter(workout => workout.id !== workoutId));
+    try {
+      setWorkouts(prevWorkouts => prevWorkouts.filter(workout => workout.id !== workoutId));
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      throw error;
+    }
   };
 
-  const updateWorkout = (updatedWorkout) => {
-    setWorkouts(workouts.map(workout => 
-      workout.id === updatedWorkout.id ? updatedWorkout : workout
-    ));
-  };
-
-  const startWorkout = (workoutId) => {
-    const workout = workouts.find(w => w.id === workoutId) || mockWorkout;
+  const startWorkout = (workout) => {
     setCurrentWorkout(workout);
     setCurrentExerciseIndex(0);
-    setWorkoutProgress(0);
-    setIsResting(false);
-    setRestTimeLeft(workout.defaultRestDuration);
     setIsWorkoutComplete(false);
+    setIsResting(false);
     setWorkoutStartTime(Date.now());
     setWorkoutEndTime(null);
+    setRestTimeLeft(DEFAULT_REST_TIME);
   };
 
   const completeExercise = () => {
     if (currentExerciseIndex < currentWorkout.exercises.length - 1) {
       setIsResting(true);
-      setRestTimeLeft(currentWorkout.defaultRestDuration);
+      setRestTimeLeft(DEFAULT_REST_TIME);
     } else {
-      setIsWorkoutComplete(true);
-      setWorkoutProgress(100);
+      // This is the last exercise, complete the workout
       setWorkoutEndTime(Date.now());
-    }
-  };
-
-  const completeRest = () => {
-    setIsResting(false);
-    setCurrentExerciseIndex((prev) => prev + 1);
-    setWorkoutProgress(
-      ((currentExerciseIndex + 1) / currentWorkout.exercises.length) * 100
-    );
-  };
-
-  const skipRest = () => {
-    completeRest();
-  };
-
-  const addRestTime = () => {
-    setRestTimeLeft((prev) => prev + 20);
-  };
-
-  const previousExercise = () => {
-    if (currentExerciseIndex > 0) {
-      setCurrentExerciseIndex((prev) => prev - 1);
+      setIsWorkoutComplete(true);
+      // Don't reset currentWorkout here so the completion screen can access the workout data
+      setCurrentExerciseIndex(0);
       setIsResting(false);
     }
   };
@@ -102,66 +143,90 @@ export const WorkoutProvider = ({ children }) => {
   const skipExercise = () => {
     if (currentExerciseIndex < currentWorkout.exercises.length - 1) {
       setIsResting(true);
-      setRestTimeLeft(currentWorkout.defaultRestDuration);
-      setWorkoutProgress(
-        ((currentExerciseIndex + 1) / currentWorkout.exercises.length) * 100
-      );
+      setRestTimeLeft(DEFAULT_REST_TIME);
     } else {
-      setIsWorkoutComplete(true);
-      setWorkoutProgress(100);
+      // This is the last exercise, complete the workout
       setWorkoutEndTime(Date.now());
+      setIsWorkoutComplete(true);
+      // Don't reset currentWorkout here so the completion screen can access the workout data
+      setCurrentExerciseIndex(0);
+      setIsResting(false);
+    }
+  };
+
+  const completeRest = () => {
+    setIsResting(false);
+    setCurrentExerciseIndex(prev => prev + 1);
+    setRestTimeLeft(DEFAULT_REST_TIME);
+  };
+
+  const skipRest = () => {
+    setIsResting(false);
+    setCurrentExerciseIndex(prev => prev + 1);
+    setRestTimeLeft(DEFAULT_REST_TIME);
+  };
+
+  const addRestTime = () => {
+    setRestTimeLeft(prev => prev + 20);
+  };
+
+  const previousExercise = () => {
+    if (currentExerciseIndex > 0) {
+      setCurrentExerciseIndex(prev => prev - 1);
+      setIsResting(false);
     }
   };
 
   const exitWorkout = () => {
     setCurrentWorkout(null);
     setCurrentExerciseIndex(0);
-    setWorkoutProgress(0);
     setIsResting(false);
-    setRestTimeLeft(20);
     setIsWorkoutComplete(false);
-    setWorkoutStartTime(null);
     setWorkoutEndTime(null);
+    setRestTimeLeft(DEFAULT_REST_TIME);
   };
 
   const getTotalWorkoutTime = () => {
     if (!workoutStartTime || !workoutEndTime) return 0;
-    return Math.floor((workoutEndTime - workoutStartTime) / 1000);
+    return Math.floor((workoutEndTime - workoutStartTime) / 1000); // Convert to seconds
+  };
+
+  const getCurrentExercise = () => {
+    if (!currentWorkout || !currentWorkout.exercises) return null;
+    return currentWorkout.exercises[currentExerciseIndex];
   };
 
   const value = {
+    workouts,
     currentWorkout,
     currentExerciseIndex,
-    workoutProgress,
     isResting,
-    restTimeLeft,
-    setRestTimeLeft,
     isWorkoutComplete,
-    getTotalWorkoutTime,
+    workoutHistory,
+    workoutStartTime,
+    workoutEndTime,
+    restTimeLeft,
+    createWorkout,
+    updateWorkout,
+    deleteWorkout,
     startWorkout,
     completeExercise,
-    completeRest,
     skipExercise,
+    completeRest,
     skipRest,
     addRestTime,
     previousExercise,
-    mockWorkout,
-    workouts,
-    createWorkout,
-    deleteWorkout,
-    updateWorkout,
     exitWorkout,
+    getTotalWorkoutTime,
+    getCurrentExercise,
+    setRestTimeLeft
   };
 
   return (
-    <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>
+    <WorkoutContext.Provider value={value}>
+      {children}
+    </WorkoutContext.Provider>
   );
 };
 
-export const useWorkout = () => {
-  const context = useContext(WorkoutContext);
-  if (!context) {
-    throw new Error('useWorkout must be used within a WorkoutProvider');
-  }
-  return context;
-}; 
+export default WorkoutContext; 
