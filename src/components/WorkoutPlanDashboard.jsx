@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
 
 const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
   const { workouts, deleteWorkout, mockWorkout } = useWorkout();
+  const [workoutToDelete, setWorkoutToDelete] = useState(null);
 
   // Calculate total duration including rest periods
   const calculateWorkoutDuration = (exercises) => {
@@ -15,6 +16,22 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
   const formatDuration = (totalSeconds) => {
     const minutes = Math.ceil(totalSeconds / 60);
     return `${minutes} min`;
+  };
+
+  const handleDeleteClick = (e, workout) => {
+    e.stopPropagation();
+    setWorkoutToDelete(workout);
+  };
+
+  const confirmDelete = () => {
+    if (workoutToDelete) {
+      deleteWorkout(workoutToDelete.id);
+      setWorkoutToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setWorkoutToDelete(null);
   };
 
   // Weekly schedule
@@ -116,10 +133,7 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
                       </svg>
                     </button>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteWorkout(workout.id);
-                      }}
+                      onClick={(e) => handleDeleteClick(e, workout)}
                       className="p-2 text-gray-400 hover:text-red-600"
                       title="Delete workout"
                     >
@@ -144,6 +158,32 @@ const WorkoutPlanDashboard = ({ onStartWorkout, onNavigate }) => {
               ))}
             </div>
           </>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {workoutToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+              <h2 className="text-xl font-bold mb-4">Delete Workout?</h2>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete "{workoutToDelete.name}"? This action cannot be undone.
+              </p>
+              <div className="flex gap-4">
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={cancelDelete}
+                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
