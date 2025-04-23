@@ -6,6 +6,7 @@ import ExerciseExecutionScreen from './components/ExerciseExecutionScreen';
 import RestScreen from './components/RestScreen';
 import WorkoutComplete from './components/WorkoutComplete';
 import CreateWorkout from './components/CreateWorkout';
+import EditWorkout from './components/EditWorkout';
 import './App.css';
 
 const AppContent = () => {
@@ -18,6 +19,7 @@ const AppContent = () => {
     completeExercise,
     completeRest,
     skipExercise,
+    workouts,
   } = useWorkout();
 
   const [showCountdown, setShowCountdown] = useState(false);
@@ -25,6 +27,7 @@ const AppContent = () => {
     const path = window.location.pathname;
     return path === '/create-workout' ? 'create' : 'dashboard';
   });
+  const [editingWorkout, setEditingWorkout] = useState(null);
 
   const handleStartWorkout = (workoutId) => {
     startWorkout(workoutId);
@@ -35,9 +38,13 @@ const AppContent = () => {
     setShowCountdown(false);
   };
 
-  const handleNavigate = (page) => {
+  const handleNavigate = (page, workout = null) => {
     setCurrentPage(page);
-    window.history.pushState(null, '', page === 'create' ? '/create-workout' : '/');
+    if (page === 'edit' && workout) {
+      setEditingWorkout(workout);
+    }
+    window.history.pushState(null, '', page === 'create' ? '/create-workout' : 
+                                    page === 'edit' ? '/edit-workout' : '/');
   };
 
   if (showCountdown && currentWorkout) {
@@ -83,6 +90,10 @@ const AppContent = () => {
 
   if (currentPage === 'create') {
     return <CreateWorkout onNavigate={handleNavigate} />;
+  }
+
+  if (currentPage === 'edit' && editingWorkout) {
+    return <EditWorkout workout={editingWorkout} onNavigate={handleNavigate} />;
   }
 
   return <WorkoutPlanDashboard onStartWorkout={handleStartWorkout} onNavigate={handleNavigate} />;

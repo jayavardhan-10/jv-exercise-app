@@ -47,6 +47,12 @@ export const WorkoutProvider = ({ children }) => {
     setWorkouts(workouts.filter(workout => workout.id !== workoutId));
   };
 
+  const updateWorkout = (updatedWorkout) => {
+    setWorkouts(workouts.map(workout => 
+      workout.id === updatedWorkout.id ? updatedWorkout : workout
+    ));
+  };
+
   const startWorkout = (workoutId) => {
     const workout = workouts.find(w => w.id === workoutId) || mockWorkout;
     setCurrentWorkout(workout);
@@ -132,6 +138,7 @@ export const WorkoutProvider = ({ children }) => {
     workouts,
     createWorkout,
     deleteWorkout,
+    updateWorkout,
   };
 
   return (
