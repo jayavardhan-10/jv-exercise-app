@@ -5,7 +5,8 @@ import PreWorkoutCountdown from './components/PreWorkoutCountdown';
 import ExerciseExecutionScreen from './components/ExerciseExecutionScreen';
 import RestScreen from './components/RestScreen';
 import WorkoutComplete from './components/WorkoutComplete';
-import './App.css'
+import CreateWorkout from './components/CreateWorkout';
+import './App.css';
 
 const AppContent = () => {
   const {
@@ -20,6 +21,10 @@ const AppContent = () => {
   } = useWorkout();
 
   const [showCountdown, setShowCountdown] = useState(false);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const path = window.location.pathname;
+    return path === '/create-workout' ? 'create' : 'dashboard';
+  });
 
   const handleStartWorkout = (workoutId) => {
     startWorkout(workoutId);
@@ -28,6 +33,11 @@ const AppContent = () => {
 
   const handleCountdownComplete = () => {
     setShowCountdown(false);
+  };
+
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
+    window.history.pushState(null, '', page === 'create' ? '/create-workout' : '/');
   };
 
   if (showCountdown && currentWorkout) {
@@ -71,7 +81,11 @@ const AppContent = () => {
     );
   }
 
-  return <WorkoutPlanDashboard onStartWorkout={handleStartWorkout} />;
+  if (currentPage === 'create') {
+    return <CreateWorkout onNavigate={handleNavigate} />;
+  }
+
+  return <WorkoutPlanDashboard onStartWorkout={handleStartWorkout} onNavigate={handleNavigate} />;
 };
 
 function App() {

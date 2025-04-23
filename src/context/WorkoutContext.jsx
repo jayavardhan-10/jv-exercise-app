@@ -1,6 +1,20 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const WorkoutContext = createContext();
+
+const LOCAL_STORAGE_KEY = 'workouts';
+
+// Mock workout data for initial development
+const mockWorkout = {
+  id: 1,
+  name: 'Default Workout',
+  exercises: [
+    { id: 1, name: 'Jumping Jacks', duration: 60, gifUrl: '' },
+    { id: 2, name: 'Push-ups', duration: 45, gifUrl: '' },
+    { id: 3, name: 'Squats', duration: 60, gifUrl: '' },
+  ],
+  defaultRestDuration: 20,
+};
 
 export const WorkoutProvider = ({ children }) => {
   const [currentWorkout, setCurrentWorkout] = useState(null);
@@ -11,25 +25,35 @@ export const WorkoutProvider = ({ children }) => {
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false);
   const [workoutStartTime, setWorkoutStartTime] = useState(null);
   const [workoutEndTime, setWorkoutEndTime] = useState(null);
+  const [workouts, setWorkouts] = useState(() => {
+    const savedWorkouts = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return savedWorkouts ? JSON.parse(savedWorkouts) : [mockWorkout];
+  });
 
-  // Mock workout data for initial development
-  const mockWorkout = {
-    id: 1,
-    name: 'Day 1 Workout',
-    exercises: [
-      { id: 1, name: 'Jumping Jacks', duration: 60, gifUrl: '' },
-      { id: 2, name: 'Push-ups', duration: 45, gifUrl: '' },
-      { id: 3, name: 'Squats', duration: 60, gifUrl: '' },
-    ],
-    defaultRestDuration: 20,
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(workouts));
+  }, [workouts]);
+
+  const createWorkout = (workoutData) => {
+    const newWorkout = {
+      id: Date.now(),
+      ...workoutData,
+      defaultRestDuration: 20,
+    };
+    setWorkouts([...workouts, newWorkout]);
+  };
+
+  const deleteWorkout = (workoutId) => {
+    setWorkouts(workouts.filter(workout => workout.id !== workoutId));
   };
 
   const startWorkout = (workoutId) => {
-    setCurrentWorkout(mockWorkout);
+    const workout = workouts.find(w => w.id === workoutId) || mockWorkout;
+    setCurrentWorkout(workout);
     setCurrentExerciseIndex(0);
     setWorkoutProgress(0);
     setIsResting(false);
-    setRestTimeLeft(mockWorkout.defaultRestDuration);
+    setRestTimeLeft(workout.defaultRestDuration);
     setIsWorkoutComplete(false);
     setWorkoutStartTime(Date.now());
     setWorkoutEndTime(null);
@@ -105,6 +129,9 @@ export const WorkoutProvider = ({ children }) => {
     addRestTime,
     previousExercise,
     mockWorkout,
+    workouts,
+    createWorkout,
+    deleteWorkout,
   };
 
   return (
