@@ -12,32 +12,26 @@ const ExerciseExecutionScreen = () => {
   } = useWorkout();
 
   const exercise = currentWorkout.exercises[currentExerciseIndex];
-  const [timeLeft, setTimeLeft] = useState(exercise.duration);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  // Reset timer when exercise changes
-  useEffect(() => {
-    setTimeLeft(exercise.duration);
-    setIsPaused(false);
-  }, [exercise]);
-
+  // Start timer when exercise starts
   useEffect(() => {
     let timer;
-    if (!isPaused && timeLeft > 0) {
+    if (!isPaused) {
       timer = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            completeExercise();
-            return 0;
-          }
-          return prev - 1;
-        });
+        setElapsedTime(prev => prev + 1);
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [timeLeft, isPaused, completeExercise]);
+  }, [isPaused]);
+
+  // Reset timer when exercise changes
+  useEffect(() => {
+    setElapsedTime(0);
+    setIsPaused(false);
+  }, [exercise]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -105,10 +99,21 @@ const ExerciseExecutionScreen = () => {
           )}
 
           <div className="text-center mb-8">
-            <div className="text-6xl font-bold text-blue-600">
-              {formatTime(timeLeft)}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Target</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {exercise.sets} × {exercise.reps}
+                </p>
+                <p className="text-sm text-gray-600">Sets × Reps</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Time</p>
+                <p className="text-2xl font-bold text-gray-600">
+                  {formatTime(elapsedTime)}
+                </p>
+              </div>
             </div>
-            <p className="text-gray-600 mt-2">remaining</p>
           </div>
 
           <div className="flex justify-center space-x-4">
@@ -130,10 +135,13 @@ const ExerciseExecutionScreen = () => {
               {isPaused ? 'Resume' : 'Pause'}
             </button>
             <button
-              onClick={() => {
-                skipExercise();
-                setTimeLeft(0);
-              }}
+              onClick={completeExercise}
+              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Done
+            </button>
+            <button
+              onClick={skipExercise}
               className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
               Skip

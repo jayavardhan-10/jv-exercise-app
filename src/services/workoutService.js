@@ -1,59 +1,60 @@
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-  serverTimestamp
-} from 'firebase/firestore';
-import { db } from '../config/firebase';
+const API_URL = 'http://localhost:5000/api';
 
 export const workoutService = {
-  // Create a new workout
-  createWorkout: async (userId, workoutData) => {
+  // Get all workouts
+  getAllWorkouts: async () => {
     try {
-      const workoutsRef = collection(db, 'workouts');
-      const workout = {
-        ...workoutData,
-        userId,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      };
-      const docRef = await addDoc(workoutsRef, workout);
-      return { id: docRef.id, ...workout };
+      const response = await fetch(`${API_URL}/workouts`);
+      if (!response.ok) throw new Error('Failed to fetch workouts');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+      throw error;
+    }
+  },
+
+  // Get a single workout by ID
+  getWorkoutById: async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/workouts/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch workout');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching workout:', error);
+      throw error;
+    }
+  },
+
+  // Create a new workout
+  createWorkout: async (workoutData) => {
+    try {
+      const response = await fetch(`${API_URL}/workouts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(workoutData),
+      });
+      if (!response.ok) throw new Error('Failed to create workout');
+      return await response.json();
     } catch (error) {
       console.error('Error creating workout:', error);
       throw error;
     }
   },
 
-  // Get all workouts for a user
-  getUserWorkouts: async (userId) => {
-    try {
-      const workoutsRef = collection(db, 'workouts');
-      const q = query(workoutsRef, where('userId', '==', userId));
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Error getting workouts:', error);
-      throw error;
-    }
-  },
-
   // Update a workout
-  updateWorkout: async (workoutId, updates) => {
+  updateWorkout: async (id, updates) => {
     try {
-      const workoutRef = doc(db, 'workouts', workoutId);
-      await updateDoc(workoutRef, {
-        ...updates,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`${API_URL}/workouts/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updates),
       });
+      if (!response.ok) throw new Error('Failed to update workout');
+      return await response.json();
     } catch (error) {
       console.error('Error updating workout:', error);
       throw error;
@@ -61,10 +62,13 @@ export const workoutService = {
   },
 
   // Delete a workout
-  deleteWorkout: async (workoutId) => {
+  deleteWorkout: async (id) => {
     try {
-      const workoutRef = doc(db, 'workouts', workoutId);
-      await deleteDoc(workoutRef);
+      const response = await fetch(`${API_URL}/workouts/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete workout');
+      return await response.json();
     } catch (error) {
       console.error('Error deleting workout:', error);
       throw error;
@@ -72,36 +76,32 @@ export const workoutService = {
   },
 
   // Save workout history
-  saveWorkoutHistory: async (userId, workoutId, historyData) => {
+  saveWorkoutHistory: async (workoutHistoryData) => {
     try {
-      const historyRef = collection(db, 'workout_history');
-      const history = {
-        userId,
-        workoutId,
-        ...historyData,
-        completedAt: serverTimestamp()
-      };
-      const docRef = await addDoc(historyRef, history);
-      return { id: docRef.id, ...history };
+      const response = await fetch(`${API_URL}/workouts/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(workoutHistoryData),
+      });
+      if (!response.ok) throw new Error('Failed to save workout history');
+      return await response.json();
     } catch (error) {
       console.error('Error saving workout history:', error);
       throw error;
     }
   },
 
-  // Get workout history for a user
-  getUserWorkoutHistory: async (userId) => {
+  // Get workout history
+  getWorkoutHistory: async () => {
     try {
-      const historyRef = collection(db, 'workout_history');
-      const q = query(historyRef, where('userId', '==', userId));
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const response = await fetch(`${API_URL}/workouts/history`);
+      if (!response.ok) throw new Error('Failed to fetch workout history');
+      return await response.json();
     } catch (error) {
-      console.error('Error getting workout history:', error);
+      console.error('Error fetching workout history:', error);
       throw error;
     }
-  }
+  },
 }; 
