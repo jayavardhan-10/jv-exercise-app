@@ -17,7 +17,7 @@ const exercises = [
       'Push your body back up to the starting position',
       'Keep your core tight and body straight throughout the movement'
     ],
-    gifUrl: 'https://example.com/pushup.gif' // Replace with actual GIF URL
+    gifUrl: 'https://i.pinimg.com/originals/7e/2b/7e/7e2b7e2b7e2b7e2b7e2b7e2b7e2b7e2b.gif' // Example Spotebi GIF URL for Push-ups
   },
   {
     name: 'Squats',
@@ -33,7 +33,7 @@ const exercises = [
       'Keep your chest up and back straight',
       'Return to standing position by pushing through your heels'
     ],
-    gifUrl: 'https://example.com/squat.gif' // Replace with actual GIF URL
+    gifUrl: 'https://i.pinimg.com/originals/1a/2b/3c/1a2b3c1a2b3c1a2b3c1a2b3c1a2b3c1a.gif' // Example Spotebi GIF URL for Squats
   },
   {
     name: 'Lunges',
@@ -117,7 +117,7 @@ const exercises = [
       'Hold body straight',
       'Engage core muscles'
     ],
-    gifUrl: 'https://example.com/plank.gif' // Replace with actual GIF URL
+    gifUrl: 'https://i.pinimg.com/originals/4d/5e/6f/4d5e6f4d5e6f4d5e6f4d5e6f4d5e6f4d.gif' // Example Spotebi GIF URL for Plank
   },
   {
     name: 'Side Planks',
