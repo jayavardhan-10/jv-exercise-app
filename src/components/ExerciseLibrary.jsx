@@ -8,7 +8,7 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Push', 'Pull', 'Legs', 'Core', 'Cardio'];
+  const categories = ['All', 'Strength', 'Cardio', 'Core', 'Warmup', 'Stretching'];
 
   useEffect(() => {
     loadExercises();
