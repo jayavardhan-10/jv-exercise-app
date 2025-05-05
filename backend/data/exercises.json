@@ -1,0 +1,224 @@
+{
+  "exercises": [
+    {
+      "name": "Push-ups",
+      "category": "Strength",
+      "equipment": "Bodyweight",
+      "difficulty": "Intermediate",
+      "instructions": "Start in a plank position with hands shoulder-width apart. Lower your body until your chest nearly touches the ground. Push back up to starting position.",
+      "gifUrl": "https://api.exercisedb.io/image/HxTsw6h7Qz2XE1",
+      "defaultSets": 3,
+      "defaultReps": 10
+    },
+    {
+      "name": "Squats",
+      "category": "Strength",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Stand with feet shoulder-width apart. Lower your body by bending knees and hips. Keep back straight and return to starting position.",
+      "gifUrl": "https://api.exercisedb.io/image/5sY7MbhGQ9X2Nj",
+      "defaultSets": 3,
+      "defaultReps": 12
+    },
+    {
+      "name": "Jumping Jacks",
+      "category": "Cardio",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Start standing with feet together and arms at sides. Jump feet apart while raising arms overhead, then return to starting position.",
+      "gifUrl": "https://api.exercisedb.io/image/Kj8sN2hPQ7X9Vm",
+      "defaultSets": 3,
+      "defaultReps": 30
+    },
+    {
+      "name": "Arm Circles",
+      "category": "Warmup",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Stand with arms extended to sides. Make circular motions with arms, gradually increasing circle size.",
+      "gifUrl": "https://api.exercisedb.io/image/Rt4Nw9hKP8X5Bm",
+      "defaultSets": 2,
+      "defaultReps": 20
+    },
+    {
+      "name": "Dynamic Leg Swings",
+      "category": "Warmup",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Stand on one leg, swing other leg forward and back in a controlled motion. Switch legs after set.",
+      "gifUrl": "https://api.exercisedb.io/image/Yw6Tk4hLM2X8Np",
+      "defaultSets": 2,
+      "defaultReps": 15
+    },
+    {
+      "name": "Plank",
+      "category": "Core",
+      "equipment": "Bodyweight",
+      "difficulty": "Intermediate",
+      "instructions": "Hold a push-up position with forearms on ground. Keep body straight from head to heels.",
+      "gifUrl": "https://api.exercisedb.io/image/Bm5Nk7hJQ4X2Vp",
+      "defaultSets": 3,
+      "defaultReps": 30
+    },
+    {
+      "name": "Side Plank Left",
+      "category": "Core",
+      "equipment": "Bodyweight",
+      "difficulty": "Intermediate",
+      "instructions": "Lie on left side, prop up on left forearm. Raise hips until body forms straight line.",
+      "gifUrl": "https://api.exercisedb.io/image/Ht7Nw5hKP9X3Bm",
+      "defaultSets": 3,
+      "defaultReps": 20
+    },
+    {
+      "name": "Side Plank Right",
+      "category": "Core",
+      "equipment": "Bodyweight",
+      "difficulty": "Intermediate",
+      "instructions": "Lie on right side, prop up on right forearm. Raise hips until body forms straight line.",
+      "gifUrl": "https://api.exercisedb.io/image/Jk4Nm8hLP6X2Vw",
+      "defaultSets": 3,
+      "defaultReps": 20
+    },
+    {
+      "name": "Lunges",
+      "category": "Strength",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Step forward with one leg, lowering hips until both knees are bent at 90 degrees. Return and alternate legs.",
+      "gifUrl": "https://api.exercisedb.io/image/Nm5Tk9hPQ8X4Bw",
+      "defaultSets": 3,
+      "defaultReps": 12
+    },
+    {
+      "name": "Leg Raises",
+      "category": "Core",
+      "equipment": "Bodyweight",
+      "difficulty": "Intermediate",
+      "instructions": "Lie on back, legs straight. Keeping legs together, lift them up to 90 degrees, then lower slowly.",
+      "gifUrl": "https://api.exercisedb.io/image/Kt6Nw4hJP7X2Vm",
+      "defaultSets": 3,
+      "defaultReps": 15
+    },
+    {
+      "name": "High Knees",
+      "category": "Cardio",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Run in place, lifting knees as high as possible. Maintain quick pace.",
+      "gifUrl": "https://api.exercisedb.io/image/Rt8Nk5hKQ4X9Bp",
+      "defaultSets": 3,
+      "defaultReps": 30
+    },
+    {
+      "name": "Dumbbell Rows",
+      "category": "Strength",
+      "equipment": "Dumbbells",
+      "difficulty": "Intermediate",
+      "instructions": "Bend at hips, back straight. Pull dumbbells to sides of chest, then lower.",
+      "gifUrl": "https://api.exercisedb.io/image/Yw9Tm6hLP8X2Nk",
+      "defaultSets": 3,
+      "defaultReps": 12
+    },
+    {
+      "name": "Torso Twists",
+      "category": "Core",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Sit with knees bent, feet off ground. Rotate torso side to side, keeping core engaged.",
+      "gifUrl": "https://api.exercisedb.io/image/Bk7Nw4hKP5X2Vm",
+      "defaultSets": 3,
+      "defaultReps": 20
+    },
+    {
+      "name": "Ankle Circles",
+      "category": "Warmup",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Lift foot off ground, rotate ankle in circular motion. Switch directions and feet.",
+      "gifUrl": "https://api.exercisedb.io/image/Jt5Nk8hLP6X3Bw",
+      "defaultSets": 2,
+      "defaultReps": 15
+    },
+    {
+      "name": "Wrist Circles",
+      "category": "Warmup",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Extend arms, rotate wrists in circular motion. Switch directions.",
+      "gifUrl": "https://api.exercisedb.io/image/Ht6Nw9hKQ7X4Vm",
+      "defaultSets": 2,
+      "defaultReps": 15
+    },
+    {
+      "name": "Standing Hamstring Stretch",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Stand straight, bend forward at hips, keeping legs straight. Reach for toes.",
+      "gifUrl": "https://api.exercisedb.io/image/Nm8Tk5hLP9X2Bk",
+      "defaultSets": 2,
+      "defaultReps": 30
+    },
+    {
+      "name": "Calf Stretch",
+      "category": "Stretching",
+      "equipment": "Wall",
+      "difficulty": "Beginner",
+      "instructions": "Stand facing wall, one leg forward bent, back leg straight. Lean forward, keeping back heel down.",
+      "gifUrl": "https://api.exercisedb.io/image/Kt7Nw6hJQ8X3Vm",
+      "defaultSets": 2,
+      "defaultReps": 30
+    },
+    {
+      "name": "Seated Forward Bend",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Sit with legs extended. Bend forward from hips, reaching for toes.",
+      "gifUrl": "https://api.exercisedb.io/image/Rt9Nk7hKP5X4Bp",
+      "defaultSets": 2,
+      "defaultReps": 30
+    },
+    {
+      "name": "Cobra Stretch",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Lie face down, push chest up with arms while keeping hips on ground.",
+      "gifUrl": "https://api.exercisedb.io/image/Yw5Tm8hLQ6X2Nk",
+      "defaultSets": 2,
+      "defaultReps": 20
+    },
+    {
+      "name": "Child's Pose",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Kneel on floor, sit back on heels. Extend arms forward, lowering chest to ground.",
+      "gifUrl": "https://api.exercisedb.io/image/Bk8Nw5hKP7X3Vm",
+      "defaultSets": 2,
+      "defaultReps": 30
+    },
+    {
+      "name": "Neck Rolls",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Slowly roll head in circular motion, keeping shoulders relaxed.",
+      "gifUrl": "https://api.exercisedb.io/image/Jt6Nk9hLP8X4Bw",
+      "defaultSets": 2,
+      "defaultReps": 10
+    },
+    {
+      "name": "Shoulder Rolls",
+      "category": "Stretching",
+      "equipment": "Bodyweight",
+      "difficulty": "Beginner",
+      "instructions": "Roll shoulders forward in circular motion, then backward.",
+      "gifUrl": "https://api.exercisedb.io/image/Ht7Nw8hKQ9X2Vm",
+      "defaultSets": 2,
+      "defaultReps": 15
+    }
+  ]
+} 
