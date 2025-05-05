@@ -17,7 +17,7 @@ const exercises = [
       'Push your body back up to the starting position',
       'Keep your core tight and body straight throughout the movement'
     ],
-    gifUrl: 'https://i.pinimg.com/originals/7e/2b/7e/7e2b7e2b7e2b7e2b7e2b7e2b7e2b7e2b.gif' // Example Spotebi GIF URL for Push-ups
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/push-up-exercise-illustration.gif'
   },
   {
     name: 'Squats',
@@ -33,7 +33,7 @@ const exercises = [
       'Keep your chest up and back straight',
       'Return to standing position by pushing through your heels'
     ],
-    gifUrl: 'https://i.pinimg.com/originals/1a/2b/3c/1a2b3c1a2b3c1a2b3c1a2b3c1a2b3c1a.gif' // Example Spotebi GIF URL for Squats
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/squat-exercise-illustration.gif'
   },
   {
     name: 'Lunges',
@@ -49,7 +49,7 @@ const exercises = [
       'Both knees should be at 90 degrees',
       'Push back to starting position'
     ],
-    gifUrl: 'https://example.com/lunge.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/lunge-exercise-illustration.gif'
   },
   {
     name: 'Dumbbell Rows',
@@ -65,7 +65,7 @@ const exercises = [
       'Pull dumbbell to hip',
       'Lower with control'
     ],
-    gifUrl: 'https://example.com/dumbbell-row.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/dumbbell-row-exercise-illustration.gif'
   },
 
   // Cardio Exercises
@@ -83,7 +83,7 @@ const exercises = [
       'Jump back to starting position',
       'Repeat at a quick pace'
     ],
-    gifUrl: 'https://example.com/jumping-jacks.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif'
   },
   {
     name: 'High Knees',
@@ -99,7 +99,7 @@ const exercises = [
       'Pump arms as if running',
       'Maintain quick pace'
     ],
-    gifUrl: 'https://example.com/high-knees.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/high-knees-exercise-illustration.gif'
   },
 
   // Core Exercises
@@ -117,7 +117,7 @@ const exercises = [
       'Hold body straight',
       'Engage core muscles'
     ],
-    gifUrl: 'https://i.pinimg.com/originals/4d/5e/6f/4d5e6f4d5e6f4d5e6f4d5e6f4d5e6f4d.gif' // Example Spotebi GIF URL for Plank
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/plank-exercise-illustration.gif'
   },
   {
     name: 'Side Planks',
@@ -133,7 +133,7 @@ const exercises = [
       'Lift hips off ground',
       'Hold position'
     ],
-    gifUrl: 'https://example.com/side-plank.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/side-plank-exercise-illustration.gif'
   },
   {
     name: 'Leg Raises',
@@ -149,7 +149,7 @@ const exercises = [
       'Raise legs to 90 degrees',
       'Lower with control'
     ],
-    gifUrl: 'https://example.com/leg-raises.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/lying-leg-raise-exercise-illustration.gif'
   },
   {
     name: 'Torso Twists',
@@ -165,7 +165,7 @@ const exercises = [
       'Twist torso side to side',
       'Keep core engaged'
     ],
-    gifUrl: 'https://example.com/torso-twists.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/seated-torso-twist-exercise-illustration.gif'
   },
 
   // Warmup Exercises
@@ -183,7 +183,7 @@ const exercises = [
       'Reverse direction',
       'Gradually increase circle size'
     ],
-    gifUrl: 'https://example.com/arm-circles.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/arm-circles-exercise-illustration.gif'
   },
   {
     name: 'Dynamic Leg Swings',
@@ -199,7 +199,7 @@ const exercises = [
       'Keep upper body stable',
       'Switch legs'
     ],
-    gifUrl: 'https://example.com/leg-swings.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/leg-swings-exercise-illustration.gif'
   },
   {
     name: 'Ankle Circles',
@@ -215,7 +215,7 @@ const exercises = [
       'Reverse direction',
       'Switch feet'
     ],
-    gifUrl: 'https://example.com/ankle-circles.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/ankle-circles-exercise-illustration.gif'
   },
   {
     name: 'Wrist Circles',
@@ -231,7 +231,7 @@ const exercises = [
       'Reverse direction',
       'Keep elbows straight'
     ],
-    gifUrl: 'https://example.com/wrist-circles.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/wrist-circles-exercise-illustration.gif'
   },
 
   // Stretching Exercises
@@ -249,7 +249,7 @@ const exercises = [
       'Keep knees slightly bent',
       'Hold stretch'
     ],
-    gifUrl: 'https://example.com/hamstring-stretch.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/standing-hamstring-stretch-exercise-illustration.gif'
   },
   {
     name: 'Calf Stretch',
@@ -265,7 +265,7 @@ const exercises = [
       'Keep back heel down',
       'Lean forward'
     ],
-    gifUrl: 'https://example.com/calf-stretch.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/calf-stretch-exercise-illustration.gif'
   },
   {
     name: 'Seated Forward Bend',
@@ -281,7 +281,7 @@ const exercises = [
       'Keep back straight',
       'Hold stretch'
     ],
-    gifUrl: 'https://example.com/forward-bend.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/seated-forward-bend-exercise-illustration.gif'
   },
   {
     name: 'Cobra Stretch',
@@ -297,10 +297,10 @@ const exercises = [
       'Push upper body up',
       'Keep hips down'
     ],
-    gifUrl: 'https://example.com/cobra-stretch.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/cobra-stretch-exercise-illustration.gif'
   },
   {
-    name: 'Child\'s Pose',
+    name: "Child's Pose",
     description: 'A relaxing stretch for the back',
     category: 'Stretching',
     defaultSets: 2,
@@ -313,7 +313,7 @@ const exercises = [
       'Fold forward',
       'Extend arms'
     ],
-    gifUrl: 'https://example.com/childs-pose.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/childs-pose-exercise-illustration.gif'
   },
   {
     name: 'Neck Rolls',
@@ -329,7 +329,7 @@ const exercises = [
       'Reverse direction',
       'Move slowly'
     ],
-    gifUrl: 'https://example.com/neck-rolls.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/neck-rolls-exercise-illustration.gif'
   },
   {
     name: 'Shoulder Rolls',
@@ -345,7 +345,7 @@ const exercises = [
       'Reverse direction',
       'Keep arms relaxed'
     ],
-    gifUrl: 'https://example.com/shoulder-rolls.gif' // Replace with actual GIF URL
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/shoulder-rolls-exercise-illustration.gif'
   }
 ];
 
