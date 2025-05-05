@@ -14,7 +14,7 @@ const exerciseSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Push', 'Pull', 'Legs', 'Core', 'Cardio'],
+    enum: ['Strength', 'Cardio', 'Core', 'Warmup', 'Stretching'],
     trim: true
   },
   defaultSets: {

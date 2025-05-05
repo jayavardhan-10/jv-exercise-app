@@ -2,379 +2,350 @@ const mongoose = require('mongoose');
 const Exercise = require('../models/exercise');
 
 const exercises = [
+  // Strength Exercises
   {
-    name: 'Push-Ups',
-    description: 'A classic upper body exercise that targets chest, shoulders, and triceps.',
-    category: 'Push',
+    name: 'Push-ups',
+    description: 'A classic bodyweight exercise that targets the chest, shoulders, and triceps',
+    category: 'Strength',
     defaultSets: 3,
     defaultReps: 12,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
       'Start in a plank position with hands slightly wider than shoulders',
-      'Keep your body in a straight line from head to heels',
-      'Lower your body until your chest nearly touches the ground',
-      'Push back up to the starting position',
-      'Repeat for desired reps'
+      'Lower your body until your chest nearly touches the floor',
+      'Push your body back up to the starting position',
+      'Keep your core tight and body straight throughout the movement'
     ],
-    gifUrl: 'https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif'
+    gifUrl: 'https://example.com/pushup.gif' // Replace with actual GIF URL
   },
   {
     name: 'Squats',
-    description: 'A fundamental lower body exercise targeting quadriceps, hamstrings, and glutes.',
-    category: 'Legs',
+    description: 'A fundamental lower body exercise that targets the quadriceps, hamstrings, and glutes',
+    category: 'Strength',
     defaultSets: 3,
     defaultReps: 15,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
       'Stand with feet shoulder-width apart',
-      'Keep your chest up and core engaged',
-      'Lower your body by bending your knees and hips',
-      'Keep your weight in your heels',
-      'Return to standing position'
+      'Lower your body by bending your knees and pushing your hips back',
+      'Keep your chest up and back straight',
+      'Return to standing position by pushing through your heels'
     ],
-    gifUrl: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif'
-  },
-  {
-    name: 'Jumping Jacks',
-    description: 'A full-body cardio exercise that raises heart rate and improves coordination.',
-    category: 'Cardio',
-    defaultSets: 3,
-    defaultReps: 30,
-    equipment: 'Bodyweight',
-    difficulty: 'Beginner',
-    instructions: [
-      'Start standing with feet together and arms at sides',
-      'Jump and spread legs while raising arms overhead',
-      'Jump back to starting position',
-      'Maintain a steady rhythm',
-      'Keep breathing steady'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
-  },
-  {
-    name: 'Arm Circles',
-    description: 'A dynamic warm-up exercise for shoulder mobility and flexibility.',
-    category: 'Warm-up',
-    defaultSets: 2,
-    defaultReps: 10,
-    equipment: 'Bodyweight',
-    difficulty: 'Beginner',
-    instructions: [
-      'Stand with feet shoulder-width apart',
-      'Extend arms straight out to sides at shoulder height',
-      'Make small circles with your arms',
-      'After 10 reps, reverse direction',
-      'Keep movements controlled and smooth'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
-  },
-  {
-    name: 'Dynamic Leg Swings',
-    description: 'A dynamic warm-up exercise to improve hip mobility and flexibility.',
-    category: 'Warm-up',
-    defaultSets: 2,
-    defaultReps: 10,
-    equipment: 'Bodyweight',
-    difficulty: 'Beginner',
-    instructions: [
-      'Stand next to a wall or support',
-      'Swing one leg forward and backward',
-      'Keep the movement controlled',
-      'Switch legs after 10 reps',
-      'Maintain upright posture'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
-  },
-  {
-    name: 'Plank',
-    description: 'An isometric core exercise that builds stability and strength.',
-    category: 'Core',
-    defaultSets: 3,
-    defaultReps: 1,
-    equipment: 'Bodyweight',
-    difficulty: 'Beginner',
-    instructions: [
-      'Start in a forearm plank position',
-      'Keep your body in a straight line',
-      'Engage your core and glutes',
-      'Hold the position',
-      'Maintain proper breathing'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif'
-  },
-  {
-    name: 'Side Plank',
-    description: 'A core exercise that targets the obliques and improves stability.',
-    category: 'Core',
-    defaultSets: 2,
-    defaultReps: 1,
-    equipment: 'Bodyweight',
-    difficulty: 'Intermediate',
-    instructions: [
-      'Lie on your side with legs straight',
-      'Prop yourself up on your forearm',
-      'Lift your hips off the ground',
-      'Keep your body in a straight line',
-      'Hold the position'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/squat.gif' // Replace with actual GIF URL
   },
   {
     name: 'Lunges',
-    description: 'A lower body exercise that targets quadriceps, hamstrings, and glutes.',
-    category: 'Legs',
+    description: 'A unilateral exercise that targets the legs and improves balance',
+    category: 'Strength',
     defaultSets: 3,
     defaultReps: 10,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand with feet hip-width apart',
-      'Step forward with one leg',
-      'Lower your body until both knees are at 90 degrees',
-      'Push back to starting position',
-      'Alternate legs'
+      'Stand with feet together',
+      'Step forward with one leg and lower your body',
+      'Both knees should be at 90 degrees',
+      'Push back to starting position'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/lunge.gif' // Replace with actual GIF URL
   },
   {
-    name: 'Leg Raises',
-    description: 'A core exercise that targets the lower abs and hip flexors.',
-    category: 'Core',
+    name: 'Dumbbell Rows',
+    description: 'A back exercise that targets the lats and improves posture',
+    category: 'Strength',
     defaultSets: 3,
     defaultReps: 12,
-    equipment: 'Bodyweight',
-    difficulty: 'Intermediate',
+    equipment: 'Dumbbell',
+    difficulty: 'Beginner',
     instructions: [
-      'Lie flat on your back',
-      'Keep legs straight and together',
-      'Lift legs up to 90 degrees',
-      'Lower legs back down with control',
-      'Keep lower back pressed to the floor'
+      'Bend at waist with one hand and knee on bench',
+      'Hold dumbbell in other hand',
+      'Pull dumbbell to hip',
+      'Lower with control'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/dumbbell-row.gif' // Replace with actual GIF URL
   },
+
+  // Cardio Exercises
   {
-    name: 'High Knees',
-    description: 'A cardio exercise that improves coordination and raises heart rate.',
+    name: 'Jumping Jacks',
+    description: 'A full-body cardio exercise that increases heart rate',
     category: 'Cardio',
     defaultSets: 3,
     defaultReps: 30,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand with feet hip-width apart',
-      'Lift one knee up to hip height',
-      'Quickly switch to the other knee',
-      'Pump your arms as you run',
-      'Maintain a quick pace'
+      'Start standing with feet together',
+      'Jump feet apart while raising arms',
+      'Jump back to starting position',
+      'Repeat at a quick pace'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/jumping-jacks.gif' // Replace with actual GIF URL
   },
   {
-    name: 'Dumbbell Rows',
-    description: 'A back exercise that targets the lats, rhomboids, and biceps.',
-    category: 'Pull',
+    name: 'High Knees',
+    description: 'A dynamic cardio exercise that improves coordination and endurance',
+    category: 'Cardio',
     defaultSets: 3,
-    defaultReps: 12,
-    equipment: 'Dumbbells',
-    difficulty: 'Beginner',
-    instructions: [
-      'Bend forward at the hips',
-      'Keep back straight and core engaged',
-      'Pull dumbbells up to your waist',
-      'Squeeze shoulder blades together',
-      'Lower weights with control'
-    ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
-  },
-  {
-    name: 'Standing Leg Swings',
-    description: 'A dynamic warm-up exercise for hip mobility.',
-    category: 'Warm-up',
-    defaultSets: 2,
-    defaultReps: 10,
+    defaultReps: 30,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand next to a wall for support',
-      'Swing one leg side to side',
-      'Keep the movement controlled',
-      'Switch legs after 10 reps',
-      'Maintain upright posture'
+      'Stand in place',
+      'Run in place bringing knees up high',
+      'Pump arms as if running',
+      'Maintain quick pace'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/high-knees.gif' // Replace with actual GIF URL
+  },
+
+  // Core Exercises
+  {
+    name: 'Plank',
+    description: 'An isometric core exercise that improves stability',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 1,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Start in push-up position',
+      'Bend elbows to 90 degrees',
+      'Hold body straight',
+      'Engage core muscles'
+    ],
+    gifUrl: 'https://example.com/plank.gif' // Replace with actual GIF URL
+  },
+  {
+    name: 'Side Planks',
+    description: 'A core exercise that targets the obliques',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 1,
+    equipment: 'Bodyweight',
+    difficulty: 'Intermediate',
+    instructions: [
+      'Lie on side',
+      'Prop up on forearm',
+      'Lift hips off ground',
+      'Hold position'
+    ],
+    gifUrl: 'https://example.com/side-plank.gif' // Replace with actual GIF URL
+  },
+  {
+    name: 'Leg Raises',
+    description: 'A core exercise that targets the lower abs',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 12,
+    equipment: 'Bodyweight',
+    difficulty: 'Intermediate',
+    instructions: [
+      'Lie on back',
+      'Keep legs straight',
+      'Raise legs to 90 degrees',
+      'Lower with control'
+    ],
+    gifUrl: 'https://example.com/leg-raises.gif' // Replace with actual GIF URL
   },
   {
     name: 'Torso Twists',
-    description: 'A warm-up exercise to improve spinal mobility.',
-    category: 'Warm-up',
+    description: 'A core exercise that targets the obliques',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 15,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Sit with knees bent',
+      'Lean back slightly',
+      'Twist torso side to side',
+      'Keep core engaged'
+    ],
+    gifUrl: 'https://example.com/torso-twists.gif' // Replace with actual GIF URL
+  },
+
+  // Warmup Exercises
+  {
+    name: 'Arm Circles',
+    description: 'A dynamic warmup for the shoulders',
+    category: 'Warmup',
     defaultSets: 2,
     defaultReps: 10,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand with feet shoulder-width apart',
-      'Keep arms extended at shoulder height',
-      'Rotate torso from side to side',
-      'Keep hips facing forward',
-      'Move in a controlled manner'
+      'Stand with arms extended',
+      'Make small circles forward',
+      'Reverse direction',
+      'Gradually increase circle size'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/arm-circles.gif' // Replace with actual GIF URL
+  },
+  {
+    name: 'Dynamic Leg Swings',
+    description: 'A dynamic warmup for the hips and legs',
+    category: 'Warmup',
+    defaultSets: 2,
+    defaultReps: 10,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Stand next to wall',
+      'Swing leg forward and back',
+      'Keep upper body stable',
+      'Switch legs'
+    ],
+    gifUrl: 'https://example.com/leg-swings.gif' // Replace with actual GIF URL
   },
   {
     name: 'Ankle Circles',
-    description: 'A warm-up exercise to improve ankle mobility.',
-    category: 'Warm-up',
+    description: 'A warmup for the ankles',
+    category: 'Warmup',
     defaultSets: 2,
     defaultReps: 10,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Sit or stand with one leg lifted',
-      'Rotate ankle in circular motion',
-      'Make 10 circles in each direction',
-      'Switch to other ankle',
-      'Keep movements controlled'
+      'Sit or stand',
+      'Rotate ankle clockwise',
+      'Reverse direction',
+      'Switch feet'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/ankle-circles.gif' // Replace with actual GIF URL
   },
   {
     name: 'Wrist Circles',
-    description: 'A warm-up exercise to improve wrist mobility.',
-    category: 'Warm-up',
+    description: 'A warmup for the wrists',
+    category: 'Warmup',
     defaultSets: 2,
     defaultReps: 10,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Extend arms in front of you',
-      'Make circles with your wrists',
-      'Rotate in both directions',
-      'Keep movements controlled',
-      'Maintain proper breathing'
+      'Extend arms forward',
+      'Rotate wrists clockwise',
+      'Reverse direction',
+      'Keep elbows straight'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/wrist-circles.gif' // Replace with actual GIF URL
   },
+
+  // Stretching Exercises
   {
     name: 'Standing Hamstring Stretch',
-    description: 'A static stretch for the hamstrings.',
-    category: 'Stretch',
+    description: 'A stretch for the back of the thighs',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 1,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand with feet hip-width apart',
-      'Extend one leg forward',
-      'Hinge at hips to reach toward toes',
-      'Keep back straight',
-      'Hold for 20-30 seconds'
+      'Stand with feet together',
+      'Bend forward at hips',
+      'Keep knees slightly bent',
+      'Hold stretch'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/hamstring-stretch.gif' // Replace with actual GIF URL
   },
   {
     name: 'Calf Stretch',
-    description: 'A static stretch for the calf muscles.',
-    category: 'Stretch',
+    description: 'A stretch for the lower legs',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 1,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand facing a wall',
-      'Place hands on wall at shoulder height',
+      'Stand facing wall',
       'Step one foot back',
-      'Keep back leg straight',
-      'Hold for 20-30 seconds'
+      'Keep back heel down',
+      'Lean forward'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/calf-stretch.gif' // Replace with actual GIF URL
   },
   {
     name: 'Seated Forward Bend',
-    description: 'A static stretch for the hamstrings and lower back.',
-    category: 'Stretch',
+    description: 'A stretch for the back and hamstrings',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 1,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Sit with legs extended straight',
-      'Reach forward toward toes',
+      'Sit with legs extended',
+      'Reach forward',
       'Keep back straight',
-      'Hold for 20-30 seconds',
-      'Breathe deeply'
+      'Hold stretch'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/forward-bend.gif' // Replace with actual GIF URL
   },
   {
     name: 'Cobra Stretch',
-    description: 'A static stretch for the abs and chest.',
-    category: 'Stretch',
+    description: 'A stretch for the chest and abdomen',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 1,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Lie on your stomach',
+      'Lie face down',
       'Place hands under shoulders',
-      'Press up to lift chest',
-      'Keep hips on ground',
-      'Hold for 20-30 seconds'
+      'Push upper body up',
+      'Keep hips down'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/cobra-stretch.gif' // Replace with actual GIF URL
   },
   {
     name: 'Child\'s Pose',
-    description: 'A relaxing stretch for the back and hips.',
-    category: 'Stretch',
+    description: 'A relaxing stretch for the back',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 1,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Kneel on the floor',
+      'Kneel on floor',
       'Sit back on heels',
-      'Fold forward with arms extended',
-      'Rest forehead on ground',
-      'Hold for 20-30 seconds'
+      'Fold forward',
+      'Extend arms'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/childs-pose.gif' // Replace with actual GIF URL
   },
   {
     name: 'Neck Rolls',
-    description: 'A gentle stretch for the neck muscles.',
-    category: 'Stretch',
+    description: 'A stretch for the neck',
+    category: 'Stretching',
     defaultSets: 2,
     defaultReps: 5,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Sit or stand with good posture',
-      'Slowly roll head in circular motion',
-      'Make 5 circles in each direction',
-      'Keep movements controlled',
-      'Breathe deeply'
+      'Stand or sit straight',
+      'Roll head clockwise',
+      'Reverse direction',
+      'Move slowly'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/neck-rolls.gif' // Replace with actual GIF URL
   },
   {
     name: 'Shoulder Rolls',
-    description: 'A gentle stretch for the shoulder muscles.',
-    category: 'Stretch',
+    description: 'A stretch for the shoulders',
+    category: 'Stretching',
     defaultSets: 2,
-    defaultReps: 10,
+    defaultReps: 5,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand with good posture',
-      'Roll shoulders in circular motion',
-      'Make 10 circles in each direction',
-      'Keep movements controlled',
-      'Breathe deeply'
+      'Stand straight',
+      'Roll shoulders forward',
+      'Reverse direction',
+      'Keep arms relaxed'
     ],
-    gifUrl: 'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif'
+    gifUrl: 'https://example.com/shoulder-rolls.gif' // Replace with actual GIF URL
   }
 ];
 
