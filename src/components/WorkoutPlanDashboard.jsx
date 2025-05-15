@@ -85,12 +85,73 @@ const WorkoutPlanDashboard = () => {
     { id: 'saturday', name: 'Saturday', isRestDay: true, completed: false },
   ];
 
+  // Default practical workouts
+  const defaultWorkouts = [
+    {
+      id: 'legs',
+      name: 'Legs Blast',
+      duration: 12,
+      exercises: [
+        { name: 'Squats', duration: 60 },
+        { name: 'Lunges', duration: 60 },
+        { name: 'Glute Bridge', duration: 60 },
+        { name: 'Wall Sit', duration: 60 },
+        { name: 'Calf Raises', duration: 60 },
+      ],
+    },
+    {
+      id: 'arms',
+      name: 'Arms Power',
+      duration: 10,
+      exercises: [
+        { name: 'Push-ups', duration: 45 },
+        { name: 'Tricep Dips', duration: 45 },
+        { name: 'Plank Up-Downs', duration: 45 },
+        { name: 'Diamond Push-ups', duration: 45 },
+      ],
+    },
+    {
+      id: 'abs',
+      name: 'Abs Core',
+      duration: 12,
+      exercises: [
+        { name: 'Crunches', duration: 45 },
+        { name: 'Russian Twist', duration: 45 },
+        { name: 'Bicycle Crunches', duration: 45 },
+        { name: 'Leg Raises', duration: 45 },
+        { name: 'Plank', duration: 60 },
+      ],
+    },
+    {
+      id: 'chest',
+      name: 'Chest Builder',
+      duration: 10,
+      exercises: [
+        { name: 'Push-ups', duration: 45 },
+        { name: 'Wide Push-ups', duration: 45 },
+        { name: 'Decline Push-ups', duration: 45 },
+        { name: 'Chest Dips', duration: 45 },
+      ],
+    },
+    {
+      id: 'shoulders',
+      name: 'Shoulder Strength',
+      duration: 10,
+      exercises: [
+        { name: 'Pike Push-ups', duration: 45 },
+        { name: 'Plank to Downward Dog', duration: 45 },
+        { name: 'Arm Circles', duration: 60 },
+        { name: 'Shoulder Taps', duration: 45 },
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header with Create Button */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Weekly Workout Plan</h1>
+          <h1 className="text-3xl font-bold">Workout Library</h1>
           <button
             onClick={() => navigate('/create')}
             className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center"
@@ -102,43 +163,43 @@ const WorkoutPlanDashboard = () => {
           </button>
         </div>
 
-        {/* Progress Overview */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Overall Progress</h2>
-          <div className="w-full bg-gray-200 rounded-full h-4">
-            <div className="bg-blue-600 h-4 rounded-full" style={{ width: '0%' }}></div>
-          </div>
-          <p className="text-center mt-2">0% Complete</p>
-        </div>
-
-        {/* Weekly Schedule */}
-        <h2 className="text-2xl font-semibold mb-4">Weekly Schedule</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {workoutDays.map((day) => (
+        {/* General Workouts */}
+        <h2 className="text-2xl font-semibold mb-4">General Workouts</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {defaultWorkouts.map((workout) => (
             <div
-              key={day.id}
-              onClick={() => !day.isRestDay && handleStartWorkout(day.id)}
-              className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-transform hover:scale-105 ${
-                day.isRestDay ? 'border-2 border-yellow-400 bg-yellow-50' : 'hover:shadow-lg'
-              } ${!day.isRestDay && 'hover:border-blue-400 border-2 border-transparent'}`}
+              key={workout.id}
+              className="bg-white rounded-lg shadow-md p-6 cursor-pointer transition-transform hover:scale-105 hover:shadow-lg border-2 border-transparent hover:border-blue-400 flex flex-col justify-between"
+              onClick={() => {
+                startWorkout({
+                  id: workout.id,
+                  name: workout.name,
+                  exercises: workout.exercises,
+                  sets: 1,
+                });
+                navigate('/workout');
+              }}
             >
-              <h3 className="text-xl font-semibold mb-2">{day.name}</h3>
-              <p className={`mb-4 ${day.isRestDay ? 'text-yellow-600' : 'text-gray-600'}`}>
-                {day.isRestDay ? 'Rest Day' : formatDuration(calculateWorkoutDuration(day.exercises))}
-              </p>
-              {day.completed && (
-                <div className="text-green-500">
-                  <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              )}
-              {!day.isRestDay && !day.completed && (
-                <p className="text-blue-600 text-sm text-center mt-2">Click to start workout</p>
-              )}
-              {day.isRestDay && (
-                <p className="text-yellow-600 text-sm text-center mt-2">Rest & Recovery</p>
-              )}
+              <h3 className="text-xl font-semibold mb-2">{workout.name}</h3>
+              <div className="text-gray-600 mb-4">
+                <p>{workout.exercises.length} exercises</p>
+                <p>{workout.duration} min</p>
+              </div>
+              <button
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={e => {
+                  e.stopPropagation();
+                  startWorkout({
+                    id: workout.id,
+                    name: workout.name,
+                    exercises: workout.exercises,
+                    sets: 1,
+                  });
+                  navigate('/workout');
+                }}
+              >
+                Start Workout
+              </button>
             </div>
           ))}
         </div>
@@ -151,7 +212,7 @@ const WorkoutPlanDashboard = () => {
               {workouts.map((workout) => (
                 <div
                   key={workout.id}
-                  className="bg-white rounded-lg shadow-md p-6 relative group"
+                  className="bg-white rounded-lg shadow-md p-6 relative group transition-transform hover:scale-105 hover:shadow-lg border-2 border-transparent hover:border-blue-400 flex flex-col justify-between"
                 >
                   <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button

@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Workout from './components/Workout';
 import CreateWorkout from './components/CreateWorkout';
 import EditWorkout from './components/EditWorkout';
+import Header from './components/Header';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <Router>
       <AuthProvider>
         <WorkoutProvider>
+          <Header streakCount={0} onStreakClick={() => {}} />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
