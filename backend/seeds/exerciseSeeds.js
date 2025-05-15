@@ -5,7 +5,7 @@ const exercises = [
   // Strength Exercises
   {
     name: 'Push-ups',
-    description: 'A classic bodyweight exercise that targets the chest, shoulders, and triceps',
+    description: 'A basic push-up exercise.',
     category: 'Strength',
     defaultSets: 3,
     defaultReps: 12,
@@ -17,11 +17,11 @@ const exercises = [
       'Push your body back up to the starting position',
       'Keep your core tight and body straight throughout the movement'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/push-up-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/2b/b7/14/2bb714fc4307d33df93cf62d56f486b2.gif'
   },
   {
     name: 'Squats',
-    description: 'A fundamental lower body exercise that targets the quadriceps, hamstrings, and glutes',
+    description: 'A basic squat exercise.',
     category: 'Strength',
     defaultSets: 3,
     defaultReps: 15,
@@ -33,11 +33,11 @@ const exercises = [
       'Keep your chest up and back straight',
       'Return to standing position by pushing through your heels'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/squat-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/39/9b/a2/399ba209e9e93331e9ff62371b5de6fa.gif'
   },
   {
     name: 'Lunges',
-    description: 'A unilateral exercise that targets the legs and improves balance',
+    description: 'A basic lunge exercise.',
     category: 'Strength',
     defaultSets: 3,
     defaultReps: 10,
@@ -49,7 +49,7 @@ const exercises = [
       'Both knees should be at 90 degrees',
       'Push back to starting position'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/lunge-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/cc/9a/a1/cc9aa14ccea120ac053e1c6450768325.gif'
   },
   {
     name: 'Dumbbell Rows',
@@ -65,13 +65,29 @@ const exercises = [
       'Pull dumbbell to hip',
       'Lower with control'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/dumbbell-row-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/df/4a/e2/df4ae262ebf58c803d8daa6cf497fa7c.gif'
+  },
+  {
+    name: 'Decline Pushups',
+    description: 'A more challenging variation of the push-up that targets upper chest',
+    category: 'Strength',
+    defaultSets: 3,
+    defaultReps: 10,
+    equipment: 'Bodyweight',
+    difficulty: 'Intermediate',
+    instructions: [
+      'Place your feet on an elevated surface',
+      'Position hands on the floor slightly wider than shoulders',
+      'Lower chest toward the floor',
+      'Push back up to starting position'
+    ],
+    gifUrl: 'https://i.pinimg.com/originals/9e/42/c1/9e42c1387fc6c446770790753b3890a8.gif'
   },
 
   // Cardio Exercises
   {
     name: 'Jumping Jacks',
-    description: 'A full-body cardio exercise that increases heart rate',
+    description: 'A basic jumping jack exercise.',
     category: 'Cardio',
     defaultSets: 3,
     defaultReps: 30,
@@ -83,7 +99,7 @@ const exercises = [
       'Jump back to starting position',
       'Repeat at a quick pace'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif'
+    gifUrl: 'https://assets-v2.lottiefiles.com/a/8c2969a2-116a-11ee-ae24-8ba0ad01121d/SvaCaM18NR.gif'
   },
   {
     name: 'High Knees',
@@ -94,12 +110,12 @@ const exercises = [
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand in place',
       'Run in place bringing knees up high',
       'Pump arms as if running',
+      'Keep core engaged',
       'Maintain quick pace'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/high-knees-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/aa/7d/6a/aa7d6ab4ac2195977e69a287ef8003f0.gif'
   },
 
   // Core Exercises
@@ -117,7 +133,7 @@ const exercises = [
       'Hold body straight',
       'Engage core muscles'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/plank-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/736x/c3/a2/ab/c3a2ab2eeb313fed71a4c30112dbd6c2.jpg'
   },
   {
     name: 'Side Planks',
@@ -133,7 +149,7 @@ const exercises = [
       'Lift hips off ground',
       'Hold position'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/side-plank-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/4b/bb/42/4bbb42ef233861f68ca244692493cb3d.gif'
   },
   {
     name: 'Leg Raises',
@@ -149,7 +165,7 @@ const exercises = [
       'Raise legs to 90 degrees',
       'Lower with control'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/lying-leg-raise-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/c0/d3/c9/c0d3c948ede881f235ee6e6ea97e57b4.gif'
   },
   {
     name: 'Torso Twists',
@@ -165,7 +181,55 @@ const exercises = [
       'Twist torso side to side',
       'Keep core engaged'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/seated-torso-twist-exercise-illustration.gif'
+    gifUrl: 'https://cdn.jefit.com/assets/img/exercises/gifs/677.gif'
+  },
+  {
+    name: 'Russian Twist',
+    description: 'A rotational core exercise that targets the obliques',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 20,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Sit on the floor with knees bent',
+      'Lean back slightly, keeping back straight',
+      'Twist torso to the right, then to the left',
+      'For added difficulty, hold a weight'
+    ],
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2015/04/russian-twist-exercise-illustration.gif'
+  },
+  {
+    name: 'Bicycle Crunches',
+    description: 'A dynamic core exercise that targets abs and obliques',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 20,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Lie on your back with hands behind head',
+      'Lift shoulders and feet off the ground',
+      'Bring right elbow to left knee while extending right leg',
+      'Alternate sides in a pedaling motion'
+    ],
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2014/10/bicycle-crunches-exercise-illustration.gif'
+  },
+  {
+    name: 'Bird Dogs',
+    description: 'A core stabilization exercise that improves balance',
+    category: 'Core',
+    defaultSets: 3,
+    defaultReps: 10,
+    equipment: 'Bodyweight',
+    difficulty: 'Beginner',
+    instructions: [
+      'Start on hands and knees',
+      'Extend right arm forward and left leg back',
+      'Hold for 2 seconds',
+      'Return to start and switch sides'
+    ],
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2014/10/bird-dogs-exercise-illustration.gif'
   },
 
   // Warmup Exercises
@@ -183,7 +247,7 @@ const exercises = [
       'Reverse direction',
       'Gradually increase circle size'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/arm-circles-exercise-illustration.gif'
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2014/10/arm-circles-exercise-illustration.gif'
   },
   {
     name: 'Dynamic Leg Swings',
@@ -199,7 +263,7 @@ const exercises = [
       'Keep upper body stable',
       'Switch legs'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/leg-swings-exercise-illustration.gif'
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2015/03/forward-leg-swings-exercise-illustration.gif'
   },
   {
     name: 'Ankle Circles',
@@ -215,7 +279,7 @@ const exercises = [
       'Reverse direction',
       'Switch feet'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/ankle-circles-exercise-illustration.gif'
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2015/03/ankle-circles-exercise-illustration.gif'
   },
   {
     name: 'Wrist Circles',
@@ -231,7 +295,7 @@ const exercises = [
       'Reverse direction',
       'Keep elbows straight'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/wrist-circles-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/df/fe/69/dffe6942482eec2e35535efc602f589f.gif'
   },
 
   // Stretching Exercises
@@ -249,7 +313,7 @@ const exercises = [
       'Keep knees slightly bent',
       'Hold stretch'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/standing-hamstring-stretch-exercise-illustration.gif'
+    gifUrl: 'https://www.shutterstock.com/image-vector/woman-doing-standing-hamstring-stretch-260nw-2391067277.jpg'
   },
   {
     name: 'Calf Stretch',
@@ -265,7 +329,7 @@ const exercises = [
       'Keep back heel down',
       'Lean forward'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/calf-stretch-exercise-illustration.gif'
+    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2015/03/calf-stretch-exercise-illustration.gif'
   },
   {
     name: 'Seated Forward Bend',
@@ -281,7 +345,7 @@ const exercises = [
       'Keep back straight',
       'Hold stretch'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/seated-forward-bend-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/736x/7b/5a/9d/7b5a9df8b0155d01455abe5afc58d9f4.jpg'
   },
   {
     name: 'Cobra Stretch',
@@ -297,7 +361,7 @@ const exercises = [
       'Push upper body up',
       'Keep hips down'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/cobra-stretch-exercise-illustration.gif'
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2014/11/ab-stretch-exercise-illustration.gif'
   },
   {
     name: "Child's Pose",
@@ -313,39 +377,39 @@ const exercises = [
       'Fold forward',
       'Extend arms'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/childs-pose-exercise-illustration.gif'
+    gifUrl: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2023/10/Childs-Pose.gif?w=315&h=840'
   },
   {
-    name: 'Neck Rolls',
-    description: 'A stretch for the neck',
+    name: 'Cat Cow Pose',
+    description: 'A gentle flow to warm up the spine and relieve back tension',
     category: 'Stretching',
     defaultSets: 2,
-    defaultReps: 5,
+    defaultReps: 8,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand or sit straight',
-      'Roll head clockwise',
-      'Reverse direction',
-      'Move slowly'
+      'Start on hands and knees',
+      'Inhale, arch back and look up (cow)',
+      'Exhale, round back and tuck chin (cat)',
+      'Flow between positions smoothly'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/neck-rolls-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/ee/4f/c2/ee4fc2c391d7df81e2e55f7b2e419924.gif'
   },
   {
     name: 'Shoulder Rolls',
     description: 'A stretch for the shoulders',
     category: 'Stretching',
     defaultSets: 2,
-    defaultReps: 5,
+    defaultReps: 10,
     equipment: 'Bodyweight',
     difficulty: 'Beginner',
     instructions: [
-      'Stand straight',
+      'Stand with arms at sides',
       'Roll shoulders forward',
-      'Reverse direction',
-      'Keep arms relaxed'
+      'Roll shoulders backward',
+      'Keep neck relaxed'
     ],
-    gifUrl: 'https://www.spotebi.com/wp-content/uploads/2014/10/shoulder-rolls-exercise-illustration.gif'
+    gifUrl: 'https://i.pinimg.com/originals/dd/94/6b/dd946b36434612cae6d4ce39d57b1882.gif'
   }
 ];
 
@@ -384,4 +448,4 @@ const seedExercises = async () => {
 };
 
 // Run the seed function
-seedExercises(); 
+seedExercises();

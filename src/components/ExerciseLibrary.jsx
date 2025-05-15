@@ -30,7 +30,7 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
 
   const filteredExercises = exercises.filter(exercise => {
     const matchesSearch = exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
+                         (exercise.description && exercise.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'All' || exercise.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -77,9 +77,9 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
             }`}
             onClick={() => isSelectionMode && onExerciseSelect(exercise)}
           >
-            <div className="aspect-w-16 aspect-h-9">
+            <div className="aspect-w-16 aspect-h-9 bg-gray-100">
               <img
-                src={exercise.gifUrl}
+                src={exercise.gifUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
                 alt={exercise.name}
                 className="object-cover w-full h-full"
               />

@@ -88,15 +88,19 @@ const ExerciseExecutionScreen = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
           <h1 className="text-3xl font-bold text-center mb-4">{exercise.name}</h1>
           
-          {exercise.gifUrl && (
-            <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-8">
+            {exercise.gifUrl ? (
               <img
                 src={exercise.gifUrl}
                 alt={exercise.name}
                 className="max-w-full h-64 object-contain rounded-lg"
               />
-            </div>
-          )}
+            ) : (
+              <div className="bg-gray-100 h-64 w-full flex items-center justify-center rounded-lg">
+                <p className="text-gray-500">No animation available</p>
+              </div>
+            )}
+          </div>
 
           <div className="text-center mb-8">
             <div className="grid grid-cols-2 gap-4 mb-6">
