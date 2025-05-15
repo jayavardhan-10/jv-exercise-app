@@ -11,21 +11,40 @@ const ExerciseExecutionScreen = () => {
     exitWorkout,
   } = useWorkout();
 
-  const exercise = currentWorkout.exercises[currentExerciseIndex];
+  // Flatten the exercises array for the number of sets
+  const setsCount = currentWorkout.sets || 1;
+  const baseExercises = currentWorkout.exercises || [];
+  const flattenedExercises = Array.from({ length: setsCount })
+    .flatMap(() => baseExercises);
+
+  const exercise = flattenedExercises[currentExerciseIndex];
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
-  // Start timer when exercise starts
+  // Timer logic
   useEffect(() => {
     let timer;
     if (!isPaused) {
-      timer = setInterval(() => {
-        setElapsedTime(prev => prev + 1);
-      }, 1000);
+      if (exercise.useDuration) {
+        // Countdown
+        if (elapsedTime < exercise.duration) {
+          timer = setInterval(() => {
+            setElapsedTime(prev => prev + 1);
+          }, 1000);
+        } else {
+          // Auto-advance when time is up
+          completeExercise();
+        }
+      } else {
+        // Count up
+        timer = setInterval(() => {
+          setElapsedTime(prev => prev + 1);
+        }, 1000);
+      }
     }
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, elapsedTime, exercise, completeExercise]);
 
   // Reset timer when exercise changes
   useEffect(() => {
@@ -51,7 +70,9 @@ const ExerciseExecutionScreen = () => {
     setShowExitConfirm(false);
   };
 
-  const progress = ((currentExerciseIndex) / currentWorkout.exercises.length) * 100;
+  const progress = ((currentExerciseIndex) / flattenedExercises.length) * 100;
+  const setNumber = Math.floor(currentExerciseIndex / baseExercises.length) + 1;
+  const exerciseNumber = (currentExerciseIndex % baseExercises.length) + 1;
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -80,7 +101,7 @@ const ExerciseExecutionScreen = () => {
         {/* Progress Indicator */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
           <p className="text-center text-lg">
-            Exercise {currentExerciseIndex + 1} of {currentWorkout.exercises.length}
+            Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}
           </p>
         </div>
 
@@ -107,14 +128,14 @@ const ExerciseExecutionScreen = () => {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Target</p>
                 <p className="text-2xl font-bold text-blue-600">
-                  {exercise.sets} × {exercise.reps}
+                  {exercise.useDuration ? `${exercise.duration} sec` : `${exercise.reps} reps`}
                 </p>
-                <p className="text-sm text-gray-600">Sets × Reps</p>
+                <p className="text-sm text-gray-600">{exercise.useDuration ? 'Duration' : 'Reps'}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Time</p>
                 <p className="text-2xl font-bold text-gray-600">
-                  {formatTime(elapsedTime)}
+                  {exercise.useDuration ? formatTime(Math.max(0, exercise.duration - elapsedTime)) : formatTime(elapsedTime)}
                 </p>
               </div>
             </div>
@@ -138,12 +159,14 @@ const ExerciseExecutionScreen = () => {
             >
               {isPaused ? 'Resume' : 'Pause'}
             </button>
-            <button
-              onClick={completeExercise}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Done
-            </button>
+            {!exercise.useDuration && (
+              <button
+                onClick={completeExercise}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Done
+              </button>
+            )}
             <button
               onClick={skipExercise}
               className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"

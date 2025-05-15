@@ -11,15 +11,15 @@ const CreateWorkout = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sets, setSets] = useState(1);
 
   const handleExerciseSelect = (selectedExercise) => {
     setExercises([...exercises, {
       id: Date.now(),
       exerciseId: selectedExercise._id,
       name: selectedExercise.name,
-      sets: selectedExercise.defaultSets,
+      useDuration: false,
       reps: selectedExercise.defaultReps,
-      weight: 0,
       duration: 45,
       gifUrl: selectedExercise.gifUrl,
       instructions: selectedExercise.instructions
@@ -58,6 +58,7 @@ const CreateWorkout = () => {
       setLoading(true);
       await createWorkout({
         name: workoutName,
+        sets,
         exercises: exercises.map(({ id, ...rest }) => rest),
         createdAt: new Date().toISOString()
       });
@@ -94,6 +95,19 @@ const CreateWorkout = () => {
                 required
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Sets (Number of times to repeat the whole workout)
+              </label>
+              <input
+                type="number"
+                value={sets}
+                onChange={e => setSets(Math.max(1, parseInt(e.target.value) || 1))}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="1"
+                required
+              />
+            </div>
 
             <div>
               <div className="flex justify-between items-center mb-4">
@@ -113,48 +127,39 @@ const CreateWorkout = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="font-medium">{exercise.name}</h4>
-                        <div className="grid grid-cols-4 gap-4 mt-4">
-                          <div>
-                            <label className="block text-sm text-gray-600">Sets</label>
+                        <div className="grid grid-cols-3 gap-4 mt-4">
+                          <div className="flex items-center gap-2">
                             <input
-                              type="number"
-                              value={exercise.sets}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'sets', parseInt(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="1"
+                              type="checkbox"
+                              checked={exercise.useDuration}
+                              onChange={e => handleExerciseUpdate(exercise.id, 'useDuration', e.target.checked)}
+                              id={`duration-toggle-${exercise.id}`}
                             />
+                            <label htmlFor={`duration-toggle-${exercise.id}`} className="text-sm text-gray-600">Duration</label>
                           </div>
-                          <div>
-                            <label className="block text-sm text-gray-600">Reps</label>
-                            <input
-                              type="number"
-                              value={exercise.reps}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'reps', parseInt(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="1"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-600">Weight (kg)</label>
-                            <input
-                              type="number"
-                              value={exercise.weight}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'weight', parseFloat(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="0"
-                              step="0.5"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-600">Duration (s)</label>
-                            <input
-                              type="number"
-                              value={exercise.duration}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'duration', parseInt(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="1"
-                            />
-                          </div>
+                          {exercise.useDuration ? (
+                            <div>
+                              <label className="block text-sm text-gray-600">Duration (s)</label>
+                              <input
+                                type="number"
+                                value={exercise.duration}
+                                onChange={e => handleExerciseUpdate(exercise.id, 'duration', parseInt(e.target.value))}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                min="1"
+                              />
+                            </div>
+                          ) : (
+                            <div>
+                              <label className="block text-sm text-gray-600">Reps</label>
+                              <input
+                                type="number"
+                                value={exercise.reps}
+                                onChange={e => handleExerciseUpdate(exercise.id, 'reps', parseInt(e.target.value))}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                min="1"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                       <button

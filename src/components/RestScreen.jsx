@@ -51,7 +51,14 @@ const RestScreen = () => {
     setShowExitConfirm(false);
   };
 
-  const nextExercise = currentWorkout.exercises[currentExerciseIndex + 1];
+  // Flatten the exercises array for the number of sets
+  const setsCount = currentWorkout.sets || 1;
+  const baseExercises = currentWorkout.exercises || [];
+  const flattenedExercises = Array.from({ length: setsCount })
+    .flatMap(() => baseExercises);
+  const nextExercise = flattenedExercises[currentExerciseIndex + 1];
+  const setNumber = Math.floor((currentExerciseIndex + 1) / baseExercises.length) + 1;
+  const exerciseNumber = ((currentExerciseIndex + 1) % baseExercises.length) + 1;
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -82,8 +89,17 @@ const RestScreen = () => {
           {/* Next Exercise Preview */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <h2 className="text-xl font-semibold mb-2">Next Exercise:</h2>
-            <p className="text-lg text-blue-600">{nextExercise.name}</p>
-            <p className="text-gray-600">Duration: {formatTime(nextExercise.duration)}</p>
+            <p className="text-lg text-blue-600">{nextExercise ? nextExercise.name : 'Workout Complete!'}</p>
+            {nextExercise && (
+              <>
+                <p className="text-gray-600">Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}</p>
+                {nextExercise.useDuration ? (
+                  <p className="text-gray-600">Duration: {formatTime(nextExercise.duration)}</p>
+                ) : (
+                  <p className="text-gray-600">Reps: {nextExercise.reps}</p>
+                )}
+              </>
+            )}
           </div>
 
           {/* Controls */}

@@ -8,6 +8,7 @@ const EditWorkout = () => {
   const location = useLocation();
   const { updateWorkout } = useWorkout();
   const [workoutName, setWorkoutName] = useState('');
+  const [sets, setSets] = useState(1);
   const [exercises, setExercises] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ const EditWorkout = () => {
     }
 
     setWorkoutName(workout.name);
+    setSets(workout.sets || 1);
     setExercises(workout.exercises.map(ex => ({
       ...ex,
       id: Date.now() + Math.random() // Ensure unique IDs
@@ -32,9 +34,9 @@ const EditWorkout = () => {
       id: Date.now(),
       exerciseId: selectedExercise._id,
       name: selectedExercise.name,
-      sets: selectedExercise.defaultSets || 3,
+      useDuration: false,
       reps: selectedExercise.defaultReps || 10,
-      weight: 0,
+      duration: 45,
       gifUrl: selectedExercise.gifUrl,
       instructions: selectedExercise.instructions
     }]);
@@ -77,6 +79,7 @@ const EditWorkout = () => {
 
       await updateWorkout(workout.id, {
         name: workoutName,
+        sets,
         exercises: exercises.map(({ id, ...rest }) => rest),
         updatedAt: new Date().toISOString()
       });
@@ -115,6 +118,20 @@ const EditWorkout = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Sets (Number of times to repeat the whole workout)
+              </label>
+              <input
+                type="number"
+                value={sets}
+                onChange={e => setSets(Math.max(1, parseInt(e.target.value) || 1))}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                min="1"
+                required
+              />
+            </div>
+
+            <div>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium">Exercises</h3>
                 <button
@@ -133,37 +150,38 @@ const EditWorkout = () => {
                       <div className="flex-1">
                         <h4 className="font-medium">{exercise.name}</h4>
                         <div className="grid grid-cols-3 gap-4 mt-4">
-                          <div>
-                            <label className="block text-sm text-gray-600">Sets</label>
+                          <div className="flex items-center gap-2">
                             <input
-                              type="number"
-                              value={exercise.sets}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'sets', parseInt(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="1"
+                              type="checkbox"
+                              checked={exercise.useDuration}
+                              onChange={e => handleExerciseUpdate(exercise.id, 'useDuration', e.target.checked)}
+                              id={`duration-toggle-${exercise.id}`}
                             />
+                            <label htmlFor={`duration-toggle-${exercise.id}`} className="text-sm text-gray-600">Duration</label>
                           </div>
-                          <div>
-                            <label className="block text-sm text-gray-600">Reps</label>
-                            <input
-                              type="number"
-                              value={exercise.reps}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'reps', parseInt(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="1"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm text-gray-600">Weight (kg)</label>
-                            <input
-                              type="number"
-                              value={exercise.weight}
-                              onChange={(e) => handleExerciseUpdate(exercise.id, 'weight', parseFloat(e.target.value))}
-                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                              min="0"
-                              step="0.5"
-                            />
-                          </div>
+                          {exercise.useDuration ? (
+                            <div>
+                              <label className="block text-sm text-gray-600">Duration (s)</label>
+                              <input
+                                type="number"
+                                value={exercise.duration}
+                                onChange={e => handleExerciseUpdate(exercise.id, 'duration', parseInt(e.target.value))}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                min="1"
+                              />
+                            </div>
+                          ) : (
+                            <div>
+                              <label className="block text-sm text-gray-600">Reps</label>
+                              <input
+                                type="number"
+                                value={exercise.reps}
+                                onChange={e => handleExerciseUpdate(exercise.id, 'reps', parseInt(e.target.value))}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                min="1"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                       <button

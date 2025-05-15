@@ -4,12 +4,14 @@ import ExerciseSelectionModal from './ExerciseSelectionModal';
 const WorkoutForm = ({ onSubmit, initialData = null }) => {
   const [workoutName, setWorkoutName] = useState(initialData?.name || '');
   const [exercises, setExercises] = useState(initialData?.exercises || []);
+  const [sets, setSets] = useState(initialData?.sets || 1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
       name: workoutName,
+      sets,
       exercises: exercises
     });
   };
@@ -18,9 +20,9 @@ const WorkoutForm = ({ onSubmit, initialData = null }) => {
     setExercises([...exercises, {
       exerciseId: selectedExercise._id,
       name: selectedExercise.name,
-      sets: selectedExercise.defaultSets,
+      useDuration: false,
       reps: selectedExercise.defaultReps,
-      weight: 0,
+      duration: 45,
       gifUrl: selectedExercise.gifUrl,
       instructions: selectedExercise.instructions
     }]);
@@ -54,6 +56,19 @@ const WorkoutForm = ({ onSubmit, initialData = null }) => {
             required
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Sets (Number of times to repeat the whole workout)
+          </label>
+          <input
+            type="number"
+            value={sets}
+            onChange={e => setSets(Math.max(1, parseInt(e.target.value) || 1))}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            min="1"
+            required
+          />
+        </div>
 
         <div>
           <div className="flex justify-between items-center mb-4">
@@ -74,37 +89,38 @@ const WorkoutForm = ({ onSubmit, initialData = null }) => {
                   <div className="flex-1">
                     <h4 className="font-medium">{exercise.name}</h4>
                     <div className="grid grid-cols-3 gap-4 mt-4">
-                      <div>
-                        <label className="block text-sm text-gray-600">Sets</label>
+                      <div className="flex items-center gap-2">
                         <input
-                          type="number"
-                          value={exercise.sets}
-                          onChange={(e) => handleExerciseUpdate(index, 'sets', parseInt(e.target.value))}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          min="1"
+                          type="checkbox"
+                          checked={exercise.useDuration}
+                          onChange={e => handleExerciseUpdate(index, 'useDuration', e.target.checked)}
+                          id={`duration-toggle-${index}`}
                         />
+                        <label htmlFor={`duration-toggle-${index}`} className="text-sm text-gray-600">Duration</label>
                       </div>
-                      <div>
-                        <label className="block text-sm text-gray-600">Reps</label>
-                        <input
-                          type="number"
-                          value={exercise.reps}
-                          onChange={(e) => handleExerciseUpdate(index, 'reps', parseInt(e.target.value))}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          min="1"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-600">Weight (kg)</label>
-                        <input
-                          type="number"
-                          value={exercise.weight}
-                          onChange={(e) => handleExerciseUpdate(index, 'weight', parseFloat(e.target.value))}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          min="0"
-                          step="0.5"
-                        />
-                      </div>
+                      {exercise.useDuration ? (
+                        <div>
+                          <label className="block text-sm text-gray-600">Duration (s)</label>
+                          <input
+                            type="number"
+                            value={exercise.duration}
+                            onChange={e => handleExerciseUpdate(index, 'duration', parseInt(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            min="1"
+                          />
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="block text-sm text-gray-600">Reps</label>
+                          <input
+                            type="number"
+                            value={exercise.reps}
+                            onChange={e => handleExerciseUpdate(index, 'reps', parseInt(e.target.value))}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            min="1"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <button

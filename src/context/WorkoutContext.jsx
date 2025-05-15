@@ -127,28 +127,34 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   const completeExercise = () => {
-    if (currentExerciseIndex < currentWorkout.exercises.length - 1) {
+    // Flattened exercise count
+    const setsCount = currentWorkout.sets || 1;
+    const baseExercises = currentWorkout.exercises || [];
+    const totalExercises = setsCount * baseExercises.length;
+    if (currentExerciseIndex < totalExercises - 1) {
       setIsResting(true);
       setRestTimeLeft(DEFAULT_REST_TIME);
     } else {
       // This is the last exercise, complete the workout
       setWorkoutEndTime(Date.now());
       setIsWorkoutComplete(true);
-      // Don't reset currentWorkout here so the completion screen can access the workout data
       setCurrentExerciseIndex(0);
       setIsResting(false);
     }
   };
 
   const skipExercise = () => {
-    if (currentExerciseIndex < currentWorkout.exercises.length - 1) {
+    // Flattened exercise count
+    const setsCount = currentWorkout.sets || 1;
+    const baseExercises = currentWorkout.exercises || [];
+    const totalExercises = setsCount * baseExercises.length;
+    if (currentExerciseIndex < totalExercises - 1) {
       setIsResting(true);
       setRestTimeLeft(DEFAULT_REST_TIME);
     } else {
       // This is the last exercise, complete the workout
       setWorkoutEndTime(Date.now());
       setIsWorkoutComplete(true);
-      // Don't reset currentWorkout here so the completion screen can access the workout data
       setCurrentExerciseIndex(0);
       setIsResting(false);
     }

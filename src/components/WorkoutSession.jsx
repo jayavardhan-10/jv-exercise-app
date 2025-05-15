@@ -57,9 +57,19 @@ const WorkoutSession = () => {
 
   if (!currentWorkout) return null;
 
-  const currentExercise = currentWorkout.exercises[currentExerciseIndex];
-  const nextExercise = currentWorkout.exercises[currentExerciseIndex + 1];
-  const progress = (currentExerciseIndex / currentWorkout.exercises.length) * 100;
+  // Flatten the exercises array for the number of sets
+  const setsCount = currentWorkout.sets || 1;
+  const baseExercises = currentWorkout.exercises || [];
+  const flattenedExercises = Array.from({ length: setsCount })
+    .flatMap(() => baseExercises);
+
+  const currentExercise = flattenedExercises[currentExerciseIndex];
+  const nextExercise = flattenedExercises[currentExerciseIndex + 1];
+  const progress = (currentExerciseIndex / flattenedExercises.length) * 100;
+
+  // Calculate current set and exercise within set
+  const setNumber = Math.floor(currentExerciseIndex / baseExercises.length) + 1;
+  const exerciseNumber = (currentExerciseIndex % baseExercises.length) + 1;
 
   if (isWorkoutComplete) {
     return (
@@ -108,7 +118,9 @@ const WorkoutSession = () => {
             </div>
             {nextExercise && (
               <div className="text-center">
-                <p className="text-lg text-gray-600">Next Exercise:</p>
+                <p className="text-lg text-gray-600">
+                  Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}
+                </p>
                 <p className="text-xl font-semibold">{nextExercise.name}</p>
               </div>
             )}
@@ -134,7 +146,9 @@ const WorkoutSession = () => {
           // Exercise Screen
           <div className="bg-white rounded-lg shadow-md p-8 mt-8">
             <div className="text-center mb-8">
-              <p className="text-lg text-gray-600">Exercise {currentExerciseIndex + 1} of {currentWorkout.exercises.length}</p>
+              <p className="text-lg text-gray-600">
+                Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}
+              </p>
               <h2 className="text-3xl font-bold mt-2">{currentExercise.name}</h2>
             </div>
 
