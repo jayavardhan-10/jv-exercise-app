@@ -75,7 +75,7 @@ const ExerciseExecutionScreen = () => {
   const exerciseNumber = (currentExerciseIndex % baseExercises.length) + 1;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-100 p-2 sm:p-4">
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-2 bg-gray-200">
         <div
@@ -84,12 +84,12 @@ const ExerciseExecutionScreen = () => {
         ></div>
       </div>
 
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto w-full">
         {/* Exit Button */}
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end mb-2 sm:mb-4">
           <button
             onClick={handleExit}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+            className="bg-red-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center text-sm sm:text-base"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -99,53 +99,53 @@ const ExerciseExecutionScreen = () => {
         </div>
 
         {/* Progress Indicator */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <p className="text-center text-lg">
+        <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 mb-3 sm:mb-4 transition-all duration-300">
+          <p className="text-center text-base sm:text-lg">
             Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}
           </p>
         </div>
 
         {/* Exercise Info */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-center mb-4">{exercise.name}</h1>
+        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-6 mb-4 sm:mb-6 transition-all duration-300">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-3 sm:mb-4">{exercise.name}</h1>
           
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-6 sm:mb-8">
             {exercise.gifUrl ? (
               <img
                 src={exercise.gifUrl}
                 alt={exercise.name}
-                className="max-w-full h-64 object-contain rounded-lg"
+                className="w-32 h-32 sm:w-64 sm:h-64 object-contain rounded-lg shadow transition-all duration-300"
               />
             ) : (
-              <div className="bg-gray-100 h-64 w-full flex items-center justify-center rounded-lg">
+              <div className="bg-gray-100 w-32 h-32 sm:w-64 sm:h-64 flex items-center justify-center rounded-lg">
                 <p className="text-gray-500">No animation available</p>
               </div>
             )}
           </div>
 
-          <div className="text-center mb-8">
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Target</p>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-xl sm:text-2xl font-bold text-blue-600">
                   {exercise.useDuration ? `${exercise.duration} sec` : `${exercise.reps} reps`}
                 </p>
                 <p className="text-sm text-gray-600">{exercise.useDuration ? 'Duration' : 'Reps'}</p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Time</p>
-                <p className="text-2xl font-bold text-gray-600">
+                <p className="text-xl sm:text-2xl font-bold text-gray-600">
                   {exercise.useDuration ? formatTime(Math.max(0, exercise.duration - elapsedTime)) : formatTime(elapsedTime)}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
             <button
               onClick={previousExercise}
               disabled={currentExerciseIndex === 0}
-              className={`px-6 py-2 rounded-lg transition-colors ${
+              className={`px-4 py-2 rounded-lg transition-colors text-sm sm:text-base ${
                 currentExerciseIndex === 0
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-gray-500 text-white hover:bg-gray-600'
@@ -155,21 +155,21 @@ const ExerciseExecutionScreen = () => {
             </button>
             <button
               onClick={() => setIsPaused(!isPaused)}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
             >
               {isPaused ? 'Resume' : 'Pause'}
             </button>
             {!exercise.useDuration && (
               <button
                 onClick={completeExercise}
-                className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
               >
                 Done
               </button>
             )}
             <button
               onClick={skipExercise}
-              className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
             >
               Skip
             </button>
