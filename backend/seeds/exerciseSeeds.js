@@ -99,7 +99,7 @@ const exercises = [
       'Jump back to starting position',
       'Repeat at a quick pace'
     ],
-    gifUrl: 'https://assets-v2.lottiefiles.com/a/8c2969a2-116a-11ee-ae24-8ba0ad01121d/SvaCaM18NR.gif'
+    gifUrl: 'https://spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif'
   },
   {
     name: 'High Knees',
@@ -181,7 +181,7 @@ const exercises = [
       'Twist torso side to side',
       'Keep core engaged'
     ],
-    gifUrl: 'https://cdn.jefit.com/assets/img/exercises/gifs/677.gif'
+    gifUrl: 'https://raw.githubusercontent.com/jayavardhan-10/jv-exercise-app-media/main/torso%20twist1.gif'
   },
   {
     name: 'Russian Twist',
@@ -313,7 +313,7 @@ const exercises = [
       'Keep knees slightly bent',
       'Hold stretch'
     ],
-    gifUrl: 'https://www.shutterstock.com/image-vector/woman-doing-standing-hamstring-stretch-260nw-2391067277.jpg'
+    gifUrl: 'https://raw.githubusercontent.com/jayavardhan-10/jv-exercise-app-media/main/standing%20hamstring%20stretch.png'
   },
   {
     name: 'Calf Stretch',
@@ -345,7 +345,7 @@ const exercises = [
       'Keep back straight',
       'Hold stretch'
     ],
-    gifUrl: 'https://i.pinimg.com/736x/7b/5a/9d/7b5a9df8b0155d01455abe5afc58d9f4.jpg'
+    gifUrl: 'https://raw.githubusercontent.com/jayavardhan-10/jv-exercise-app-media/main/seated%20forward%20bend.png'
   },
   {
     name: 'Cobra Stretch',
@@ -377,7 +377,7 @@ const exercises = [
       'Fold forward',
       'Extend arms'
     ],
-    gifUrl: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2023/10/Childs-Pose.gif?w=315&h=840'
+    gifUrl: 'https://raw.githubusercontent.com/jayavardhan-10/jv-exercise-app-media/main/child\'s%20pose.gif'
   },
   {
     name: 'Cat Cow Pose',
