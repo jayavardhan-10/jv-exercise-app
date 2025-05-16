@@ -64,7 +64,7 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(2px)' }}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(3px)' }}>
       <div className="bg-white rounded-2xl p-4 sm:p-6 w-full max-w-lg sm:max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -145,9 +145,9 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
           <div className="space-y-6">
-            <div className="rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 p-3">
+            <div className="rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 p-4">
               <Calendar
-                className="modern-calendar"
+                className="premium-calendar"
                 tileClassName={({ date }) => {
                   return hasWorkoutOnDate(date) ? 'workout-day' : '';
                 }}
@@ -165,16 +165,37 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: intensity === 1 ? '24px' : intensity === 2 ? '28px' : '32px',
-                        height: intensity === 1 ? '24px' : intensity === 2 ? '28px' : '32px',
+                        width: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
+                        height: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
                         backgroundColor: intensity === 1 ? '#4ade80' : intensity === 2 ? '#22c55e' : '#16a34a',
                         borderRadius: '50%',
-                        opacity: intensity === 1 ? '0.3' : intensity === 2 ? '0.4' : '0.5',
-                        zIndex: '-1'
+                        opacity: intensity === 1 ? '0.25' : intensity === 2 ? '0.35' : '0.45',
+                        zIndex: '-1',
+                        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.05)'
                       }}
                     />
                   );
                 }}
+                nextLabel={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                }
+                prevLabel={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                }
+                next2Label={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                }
+                prev2Label={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />
+                  </svg>
+                }
               />
             </div>
           </div>
@@ -182,93 +203,135 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
       </div>
 
       <style jsx="true">{`
-        .modern-calendar {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        .premium-calendar {
           width: 100%;
           border: none !important;
           background: transparent !important;
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
         
-        .modern-calendar .react-calendar__navigation {
-          margin-bottom: 10px;
+        .premium-calendar .react-calendar__navigation {
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
         
-        .modern-calendar .react-calendar__navigation button {
+        .premium-calendar .react-calendar__navigation button {
           min-width: 44px;
+          height: 44px;
           background: none;
           font-size: 16px;
-          border-radius: 8px;
+          border-radius: 12px;
+          color: #1a202c;
+          margin: 0 2px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
         }
         
-        .modern-calendar .react-calendar__navigation button:enabled:hover,
-        .modern-calendar .react-calendar__navigation button:enabled:focus {
+        .premium-calendar .react-calendar__navigation button:enabled:hover,
+        .premium-calendar .react-calendar__navigation button:enabled:focus {
           background-color: rgba(0, 0, 0, 0.05);
+          transform: scale(1.05);
         }
         
-        .modern-calendar .react-calendar__month-view__weekdays {
+        .premium-calendar .react-calendar__navigation__label {
+          font-weight: 600;
+          font-size: 18px;
+          flex-grow: 1;
+        }
+        
+        .premium-calendar .react-calendar__month-view__weekdays {
           text-transform: uppercase;
-          font-weight: bold;
-          font-size: 0.8em;
+          font-weight: 600;
+          font-size: 0.85em;
+          color: #4a5568;
+          margin-bottom: 8px;
+          text-align: center;
         }
         
-        .modern-calendar .react-calendar__month-view__days__day {
+        /* Remove the underline */
+        .premium-calendar .react-calendar__month-view__weekdays__weekday {
+          padding: 8px;
+        }
+        
+        .premium-calendar .react-calendar__month-view__weekdays__weekday abbr {
+          text-decoration: none;
+          border-bottom: none;
+          cursor: default;
+        }
+        
+        .premium-calendar .react-calendar__month-view__days__day {
           padding: 8px;
           position: relative;
         }
         
-        .modern-calendar .react-calendar__tile {
+        .premium-calendar .react-calendar__tile {
           max-width: 100%;
           text-align: center;
-          padding: 12px 0;
+          padding: 14px 0;
           background: none;
           border-radius: 12px;
           position: relative;
           z-index: 1;
           font-weight: 500;
+          font-size: 16px;
+          transition: all 0.15s ease;
         }
         
-        .modern-calendar .react-calendar__tile:enabled:hover,
-        .modern-calendar .react-calendar__tile:enabled:focus {
+        .premium-calendar .react-calendar__tile:enabled:hover,
+        .premium-calendar .react-calendar__tile:enabled:focus {
           background-color: rgba(0, 0, 0, 0.05);
+          transform: scale(1.05);
         }
         
-        .modern-calendar .react-calendar__tile--now {
+        .premium-calendar .react-calendar__tile--now {
           background: rgba(66, 153, 225, 0.1);
+          font-weight: 700;
         }
         
-        .modern-calendar .react-calendar__tile--now:enabled:hover,
-        .modern-calendar .react-calendar__tile--now:enabled:focus {
+        .premium-calendar .react-calendar__tile--now:enabled:hover,
+        .premium-calendar .react-calendar__tile--now:enabled:focus {
           background: rgba(66, 153, 225, 0.2);
         }
         
-        .modern-calendar .react-calendar__tile--active {
+        .premium-calendar .react-calendar__tile--active {
           background: #3182ce;
           color: white;
+          font-weight: 600;
         }
         
-        .modern-calendar .react-calendar__tile--active:enabled:hover,
-        .modern-calendar .react-calendar__tile--active:enabled:focus {
+        .premium-calendar .react-calendar__tile--active:enabled:hover,
+        .premium-calendar .react-calendar__tile--active:enabled:focus {
           background: #2c5282;
         }
         
-        .modern-calendar .react-calendar__tile--hasActive {
-          background: #76baff;
+        .premium-calendar .react-calendar__month-view__days__day--neighboringMonth {
+          color: #a0aec0;
         }
         
-        .modern-calendar .react-calendar__tile--hasActive:enabled:hover,
-        .modern-calendar .react-calendar__tile--hasActive:enabled:focus {
-          background: #a9d4ff;
-        }
-        
-        .modern-calendar .workout-day {
-          font-weight: 600;
+        .premium-calendar .workout-day {
+          font-weight: 700;
           color: #1a202c;
         }
         
         @media (max-width: 640px) {
-          .modern-calendar .react-calendar__tile {
-            padding: 8px 0;
+          .premium-calendar .react-calendar__tile {
+            padding: 10px 0;
             font-size: 0.9rem;
+          }
+          
+          .premium-calendar .react-calendar__navigation button {
+            min-width: 36px;
+            height: 36px;
+          }
+          
+          .premium-calendar .react-calendar__navigation__label {
+            font-size: 16px;
           }
         }
       `}</style>
