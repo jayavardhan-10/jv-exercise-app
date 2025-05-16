@@ -39,8 +39,8 @@ const PreWorkoutStart = ({ onStart }) => {
                 <span className="font-semibold">{currentWorkout.exercises.length}</span>
               </p>
               <p className="flex justify-between">
-                <span className="text-gray-600">Rest Between:</span>
-                <span className="font-semibold">20 seconds</span>
+                <span className="text-gray-600">Sets:</span>
+                <span className="font-semibold">{currentWorkout.sets || 1}</span>
               </p>
             </div>
           </div>
@@ -52,7 +52,9 @@ const PreWorkoutStart = ({ onStart }) => {
                 <li key={index} className="flex justify-between items-center">
                   <span className="text-gray-600">{exercise.name}</span>
                   <span className="text-sm font-medium bg-gray-200 px-2 py-1 rounded">
-                    {exercise.duration}s
+                    {exercise.useDuration
+                      ? `${exercise.duration}s`
+                      : `${exercise.reps} reps`}
                   </span>
                 </li>
               ))}
