@@ -16,6 +16,19 @@ const RestScreen = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
+  // Calculate progress: Already completed (current) exercise should be counted
+  const setsCount = currentWorkout?.sets || 1;
+  const baseExercises = currentWorkout?.exercises || [];
+  const totalExercises = setsCount * baseExercises.length;
+  
+  console.log('Rest Screen - Sets Count:', setsCount);
+  console.log('Rest Screen - Base Exercises:', baseExercises);
+  console.log('Rest Screen - Current Exercise Index:', currentExerciseIndex);
+  console.log('Rest Screen - Total Exercises:', totalExercises);
+  
+  // During rest, the current exercise is already completed, so include it in progress
+  const progress = ((currentExerciseIndex + 1) / totalExercises) * 100;
+
   useEffect(() => {
     let timer;
     if (!isPaused && restTimeLeft > 0) {
@@ -51,18 +64,40 @@ const RestScreen = () => {
     setShowExitConfirm(false);
   };
 
-  // Flatten the exercises array for the number of sets
-  const setsCount = currentWorkout.sets || 1;
-  const baseExercises = currentWorkout.exercises || [];
-  const flattenedExercises = Array.from({ length: setsCount })
-    .flatMap(() => baseExercises);
-  const nextExercise = flattenedExercises[currentExerciseIndex + 1];
-  const setNumber = Math.floor((currentExerciseIndex + 1) / baseExercises.length) + 1;
-  const exerciseNumber = ((currentExerciseIndex + 1) % baseExercises.length) + 1;
+  const handleSkipRest = () => {
+    // Safely handle skip rest - ensure we're not going beyond total exercises
+    if (currentExerciseIndex + 1 < totalExercises) {
+      skipRest();
+    } else {
+      // If at the last exercise, complete the workout
+      exitWorkout();
+    }
+  };
+
+  // Calculate which set and exercise we're on
+  const currentSet = Math.floor((currentExerciseIndex + 1) / baseExercises.length) + 1;
+  const nextExerciseInSet = (currentExerciseIndex + 1) % baseExercises.length;
+
+  // Get the next exercise
+  const nextExercise = currentExerciseIndex + 1 < totalExercises && baseExercises.length > 0 
+    ? baseExercises[nextExerciseInSet] 
+    : null;
+    
+  console.log('Rest Screen - Current Set:', currentSet);
+  console.log('Rest Screen - Next Exercise In Set:', nextExerciseInSet);
+  console.log('Rest Screen - Next Exercise:', nextExercise);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-100">
+      {/* Progress Bar - improved appearance */}
+      <div className="w-full h-4 bg-gray-200 mb-4 mt-1">
+        <div
+          className="h-full bg-blue-600 transition-all duration-700 rounded-r"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+
+      <div className="max-w-2xl mx-auto pt-1 px-3 sm:px-4">
         {/* Exit Button */}
         <div className="flex justify-end mb-4">
           <button
@@ -92,11 +127,11 @@ const RestScreen = () => {
             <p className="text-lg text-blue-600">{nextExercise ? nextExercise.name : 'Workout Complete!'}</p>
             {nextExercise && (
               <>
-                <p className="text-gray-600">Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}</p>
+                <p className="text-gray-600">Set {currentSet} of {setsCount} — Exercise {nextExerciseInSet + 1} of {baseExercises.length}</p>
                 {nextExercise.useDuration ? (
                   <p className="text-gray-600">Duration: {formatTime(nextExercise.duration)}</p>
                 ) : (
-                  <p className="text-gray-600">Reps: {nextExercise.reps}</p>
+                  <p className="text-gray-600">Reps: {nextExercise.reps || 0}</p>
                 )}
               </>
             )}
@@ -117,7 +152,7 @@ const RestScreen = () => {
               +20s
             </button>
             <button
-              onClick={skipRest}
+              onClick={handleSkipRest}
               className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
             >
               Skip Rest

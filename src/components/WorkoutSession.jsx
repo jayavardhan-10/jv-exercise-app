@@ -100,9 +100,9 @@ const WorkoutSession = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-2 bg-gray-200">
+      <div className="w-full h-2 bg-gray-200">
         <div
-          className="h-full bg-blue-600 transition-all duration-300"
+          className="h-full bg-blue-600 transition-all duration-500"
           style={{ width: `${progress}%` }}
         ></div>
       </div>

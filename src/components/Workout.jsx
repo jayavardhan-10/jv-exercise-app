@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkout } from '../context/WorkoutContext';
 import PreWorkoutStart from './PreWorkoutStart';
@@ -20,10 +20,17 @@ const Workout = () => {
 
   const [showStart, setShowStart] = useState(true);
   const [showCountdown, setShowCountdown] = useState(false);
+  
+  // Use useEffect to navigate to dashboard if no workout is selected
+  useEffect(() => {
+    if (!currentWorkout && !isWorkoutComplete) {
+      navigate('/dashboard');
+    }
+  }, [currentWorkout, isWorkoutComplete, navigate]);
 
-  // Redirect to dashboard if no workout is selected and not completed
+  // If no workout and not completed, return empty component 
+  // while the navigation effect runs
   if (!currentWorkout && !isWorkoutComplete) {
-    navigate('/dashboard');
     return null;
   }
 
@@ -45,7 +52,7 @@ const Workout = () => {
     return (
       <PreWorkoutCountdown
         onCountdownComplete={() => setShowCountdown(false)}
-        firstExercise={currentWorkout.exercises[0].name}
+        firstExercise={currentWorkout.exercises[0]?.name || 'First Exercise'}
       />
     );
   }

@@ -117,7 +117,14 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   const startWorkout = (workout) => {
-    setCurrentWorkout(workout);
+    // Make sure workout has the necessary structure
+    const preparedWorkout = {
+      ...workout,
+      sets: workout.sets || 1,
+      exercises: workout.exercises || []
+    };
+    
+    setCurrentWorkout(preparedWorkout);
     setCurrentExerciseIndex(0);
     setIsWorkoutComplete(false);
     setIsResting(false);
@@ -161,15 +168,42 @@ export const WorkoutProvider = ({ children }) => {
   };
 
   const completeRest = () => {
-    setIsResting(false);
-    setCurrentExerciseIndex(prev => prev + 1);
-    setRestTimeLeft(DEFAULT_REST_TIME);
+    // Get the current exercise count
+    const setsCount = currentWorkout?.sets || 1;
+    const baseExercises = currentWorkout?.exercises || [];
+    const totalExercises = setsCount * baseExercises.length;
+    
+    // Check if we're moving to a valid exercise
+    if (currentExerciseIndex + 1 < totalExercises) {
+      setIsResting(false);
+      setCurrentExerciseIndex(prev => prev + 1);
+      setRestTimeLeft(DEFAULT_REST_TIME);
+    } else {
+      // If we're at the last exercise, complete the workout
+      setWorkoutEndTime(Date.now());
+      setIsWorkoutComplete(true);
+      setCurrentExerciseIndex(0);
+      setIsResting(false);
+    }
   };
 
   const skipRest = () => {
-    setIsResting(false);
-    setCurrentExerciseIndex(prev => prev + 1);
-    setRestTimeLeft(DEFAULT_REST_TIME);
+    const setsCount = currentWorkout?.sets || 1;
+    const baseExercises = currentWorkout?.exercises || [];
+    const totalExercises = setsCount * baseExercises.length;
+    
+    // Ensure we're not going beyond the total number of exercises
+    if (currentExerciseIndex + 1 < totalExercises) {
+      setIsResting(false);
+      setCurrentExerciseIndex(prev => prev + 1);
+      setRestTimeLeft(DEFAULT_REST_TIME);
+    } else {
+      // If we're at the last exercise, complete the workout
+      setWorkoutEndTime(Date.now());
+      setIsWorkoutComplete(true);
+      setCurrentExerciseIndex(0);
+      setIsResting(false);
+    }
   };
 
   const addRestTime = () => {

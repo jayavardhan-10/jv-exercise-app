@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
+import { useNavigate } from 'react-router-dom';
 
 const ExerciseExecutionScreen = () => {
+  const navigate = useNavigate();
   const {
     currentWorkout,
     currentExerciseIndex,
@@ -11,21 +13,86 @@ const ExerciseExecutionScreen = () => {
     exitWorkout,
   } = useWorkout();
 
-  // Flatten the exercises array for the number of sets
-  const setsCount = currentWorkout.sets || 1;
-  const baseExercises = currentWorkout.exercises || [];
-  const flattenedExercises = Array.from({ length: setsCount })
-    .flatMap(() => baseExercises);
-
-  const exercise = flattenedExercises[currentExerciseIndex];
+  // First, declare all state variables
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
+  // Safety check - if no current workout, redirect to dashboard
+  useEffect(() => {
+    if (!currentWorkout) {
+      navigate('/dashboard');
+    }
+  }, [currentWorkout, navigate]);
+
+  // Add detailed debugging logs
+  console.log('Current Workout:', currentWorkout);
+  console.log('Current Exercise Index:', currentExerciseIndex);
+
+  // Calculate the proper exercise from the flattened list
+  const setsCount = currentWorkout?.sets || 1;
+  const baseExercises = currentWorkout?.exercises || [];
+  
+  // Handle multiple sets - calculate which exercise in which set we're on
+  const currentSet = Math.floor(currentExerciseIndex / baseExercises.length) + 1;
+  const exerciseInSet = currentExerciseIndex % baseExercises.length;
+  
+  console.log('Sets Count:', setsCount);
+  console.log('Base Exercises:', baseExercises);
+  console.log('Current Set:', currentSet);
+  console.log('Exercise in Set:', exerciseInSet);
+  
+  // Get the current exercise (accounting for multiple sets)
+  const exercise = baseExercises.length > 0 ? baseExercises[exerciseInSet] : null;
+  console.log('Current Exercise:', exercise);
+
+  // Total number of exercises across all sets  
+  const totalExercises = setsCount * baseExercises.length;
+  
+  // If no exercise is available, show fallback UI
+  if (!exercise) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+          <h2 className="text-2xl font-bold mb-4">Exercise not found</h2>
+          <p className="mb-6">There was a problem loading the exercise.</p>
+          <button
+            onClick={exitWorkout}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Calculate progress values
+  const currentProgress = currentExerciseIndex / totalExercises * 100;
+  const nextProgress = (currentExerciseIndex + 1) / totalExercises * 100;
+  
+  // Now we can safely use exercise and elapsedTime
+  const isExerciseComplete = exercise?.useDuration ? elapsedTime >= exercise.duration - 1 : false;
+  const progress = isExerciseComplete ? nextProgress : currentProgress;
+  
+  // Define handleComplete function using useCallback to avoid dependency issues
+  const handleComplete = useCallback(() => {
+    // Update progress immediately for visual feedback before calling completeExercise
+    const progressBar = document.querySelector('.progress-bar-fill');
+    if (progressBar) {
+      progressBar.style.width = `${nextProgress}%`;
+    }
+    
+    // Short delay for visual effect before completing exercise
+    setTimeout(() => {
+      completeExercise();
+    }, 300);
+  }, [completeExercise, nextProgress]);
+
   // Timer logic
   useEffect(() => {
     let timer;
-    if (!isPaused) {
+    if (!isPaused && exercise) {
       if (exercise.useDuration) {
         // Countdown
         if (elapsedTime < exercise.duration) {
@@ -33,8 +100,8 @@ const ExerciseExecutionScreen = () => {
             setElapsedTime(prev => prev + 1);
           }, 1000);
         } else {
-          // Auto-advance when time is up
-          completeExercise();
+          // Auto-advance when time is up, with immediate progress update
+          handleComplete();
         }
       } else {
         // Count up
@@ -44,13 +111,13 @@ const ExerciseExecutionScreen = () => {
       }
     }
     return () => clearInterval(timer);
-  }, [isPaused, elapsedTime, exercise, completeExercise]);
+  }, [isPaused, elapsedTime, exercise, handleComplete]);
 
   // Reset timer when exercise changes
   useEffect(() => {
     setElapsedTime(0);
     setIsPaused(false);
-  }, [exercise]);
+  }, [exercise, currentExerciseIndex]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -70,21 +137,17 @@ const ExerciseExecutionScreen = () => {
     setShowExitConfirm(false);
   };
 
-  const progress = ((currentExerciseIndex) / flattenedExercises.length) * 100;
-  const setNumber = Math.floor(currentExerciseIndex / baseExercises.length) + 1;
-  const exerciseNumber = (currentExerciseIndex % baseExercises.length) + 1;
-
   return (
-    <div className="min-h-screen bg-gray-100 p-2 sm:p-4">
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-2 bg-gray-200">
+    <div className="min-h-screen bg-gray-100">
+      {/* Progress Bar - improved appearance */}
+      <div className="w-full h-4 bg-gray-200 mb-4 mt-1">
         <div
-          className="h-full bg-blue-600 transition-all duration-300"
+          className="progress-bar-fill h-full bg-blue-600 transition-all duration-700 rounded-r"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
 
-      <div className="max-w-2xl mx-auto w-full">
+      <div className="max-w-2xl mx-auto w-full pt-1 px-3 sm:px-4">
         {/* Exit Button */}
         <div className="flex justify-end mb-2 sm:mb-4">
           <button
@@ -101,7 +164,7 @@ const ExerciseExecutionScreen = () => {
         {/* Progress Indicator */}
         <div className="bg-white rounded-lg shadow-md p-3 sm:p-4 mb-3 sm:mb-4 transition-all duration-300">
           <p className="text-center text-base sm:text-lg">
-            Set {setNumber} of {setsCount} — Exercise {exerciseNumber} of {baseExercises.length}
+            Set {currentSet} of {setsCount} — Exercise {exerciseInSet + 1} of {baseExercises.length}
           </p>
         </div>
 
@@ -128,7 +191,7 @@ const ExerciseExecutionScreen = () => {
               <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Target</p>
                 <p className="text-xl sm:text-2xl font-bold text-blue-600">
-                  {exercise.useDuration ? `${exercise.duration} sec` : `${exercise.reps} reps`}
+                  {exercise.useDuration ? `${exercise.duration} sec` : `${exercise.reps || 0} reps`}
                 </p>
                 <p className="text-sm text-gray-600">{exercise.useDuration ? 'Duration' : 'Reps'}</p>
               </div>
@@ -161,7 +224,7 @@ const ExerciseExecutionScreen = () => {
             </button>
             {!exercise.useDuration && (
               <button
-                onClick={completeExercise}
+                onClick={handleComplete}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
               >
                 Done

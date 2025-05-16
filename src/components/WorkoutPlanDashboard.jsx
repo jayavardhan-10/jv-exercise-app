@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
+import exercisesData from '../../backend/data/exercises.json';
 
 const WorkoutPlanDashboard = () => {
   const navigate = useNavigate();
@@ -85,18 +86,25 @@ const WorkoutPlanDashboard = () => {
     { id: 'saturday', name: 'Saturday', isRestDay: true, completed: false },
   ];
 
+  // Helper to get gifUrl by exercise name from exercises.json
+  const getGifUrl = (name) => {
+    const found = exercisesData.exercises.find(
+      ex => ex.name.toLowerCase() === name.toLowerCase()
+    );
+    return found?.gifUrl || 'https://via.placeholder.com/120x120?text=No+GIF';
+  };
+
   // Default practical workouts
   const defaultWorkouts = [
     {
       id: 'legs',
       name: 'Legs Blast',
-      duration: 12,
+      duration: 10,
       exercises: [
-        { name: 'Squats', duration: 60 },
-        { name: 'Lunges', duration: 60 },
-        { name: 'Glute Bridge', duration: 60 },
-        { name: 'Wall Sit', duration: 60 },
-        { name: 'Calf Raises', duration: 60 },
+        { name: 'Squats', useDuration: false, reps: 12, duration: 45, gifUrl: getGifUrl('Squats') },
+        { name: 'Lunges', useDuration: false, reps: 10, duration: 45, gifUrl: getGifUrl('Lunges') },
+        { name: 'Calf Stretch', useDuration: true, reps: 10, duration: 30, gifUrl: getGifUrl('Calf Stretch') },
+        { name: 'Standing Hamstring Stretch', useDuration: true, reps: 10, duration: 30, gifUrl: getGifUrl('Standing Hamstring Stretch') },
       ],
     },
     {
@@ -104,22 +112,21 @@ const WorkoutPlanDashboard = () => {
       name: 'Arms Power',
       duration: 10,
       exercises: [
-        { name: 'Push-ups', duration: 45 },
-        { name: 'Tricep Dips', duration: 45 },
-        { name: 'Plank Up-Downs', duration: 45 },
-        { name: 'Diamond Push-ups', duration: 45 },
+        { name: 'Push-ups', useDuration: false, reps: 10, duration: 45, gifUrl: getGifUrl('Push-ups') },
+        { name: 'Dumbbell Rows', useDuration: false, reps: 12, duration: 45, gifUrl: getGifUrl('Dumbbell Rows') },
+        { name: 'Arm Circles', useDuration: true, reps: 15, duration: 30, gifUrl: getGifUrl('Arm Circles') },
+        { name: 'Wrist Circles', useDuration: true, reps: 10, duration: 30, gifUrl: getGifUrl('Wrist Circles') },
       ],
     },
     {
       id: 'abs',
       name: 'Abs Core',
-      duration: 12,
+      duration: 10,
       exercises: [
-        { name: 'Crunches', duration: 45 },
-        { name: 'Russian Twist', duration: 45 },
-        { name: 'Bicycle Crunches', duration: 45 },
-        { name: 'Leg Raises', duration: 45 },
-        { name: 'Plank', duration: 60 },
+        { name: 'Plank', useDuration: true, reps: 1, duration: 45, gifUrl: getGifUrl('Plank') },
+        { name: 'Russian Twist', useDuration: false, reps: 15, duration: 45, gifUrl: getGifUrl('Russian Twist') },
+        { name: 'Leg Raises', useDuration: false, reps: 12, duration: 45, gifUrl: getGifUrl('Leg Raises') },
+        { name: 'Torso Twists', useDuration: false, reps: 15, duration: 45, gifUrl: getGifUrl('Torso Twists') },
       ],
     },
     {
@@ -127,21 +134,22 @@ const WorkoutPlanDashboard = () => {
       name: 'Chest Builder',
       duration: 10,
       exercises: [
-        { name: 'Push-ups', duration: 45 },
-        { name: 'Wide Push-ups', duration: 45 },
-        { name: 'Decline Push-ups', duration: 45 },
-        { name: 'Chest Dips', duration: 45 },
+        { name: 'Push-ups', useDuration: false, reps: 12, duration: 45, gifUrl: getGifUrl('Push-ups') },
+        { name: 'Dynamic Leg Swings', useDuration: true, reps: 10, duration: 30, gifUrl: getGifUrl('Dynamic Leg Swings') },
+        { name: 'Jumping Jacks', useDuration: true, reps: 15, duration: 30, gifUrl: getGifUrl('Jumping Jacks') },
+        { name: 'High Knees', useDuration: true, reps: 20, duration: 30, gifUrl: getGifUrl('High Knees') },
       ],
     },
     {
-      id: 'shoulders',
-      name: 'Shoulder Strength',
-      duration: 10,
+      id: 'fullbody',
+      name: 'Full Body Mix',
+      duration: 12,
       exercises: [
-        { name: 'Pike Push-ups', duration: 45 },
-        { name: 'Plank to Downward Dog', duration: 45 },
-        { name: 'Arm Circles', duration: 60 },
-        { name: 'Shoulder Taps', duration: 45 },
+        { name: 'Jumping Jacks', useDuration: true, reps: 20, duration: 30, gifUrl: getGifUrl('Jumping Jacks') },
+        { name: 'Push-ups', useDuration: false, reps: 10, duration: 45, gifUrl: getGifUrl('Push-ups') },
+        { name: 'Squats', useDuration: false, reps: 12, duration: 45, gifUrl: getGifUrl('Squats') },
+        { name: 'Plank', useDuration: true, reps: 1, duration: 30, gifUrl: getGifUrl('Plank') },
+        { name: 'Shoulder Rolls', useDuration: true, reps: 10, duration: 30, gifUrl: getGifUrl('Shoulder Rolls') },
       ],
     },
   ];
