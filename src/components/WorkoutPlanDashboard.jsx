@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { useWorkout } from '../context/WorkoutContext';
+import { useWorkoutHistory } from '../context/WorkoutHistoryContext';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
+import StreakModal from './StreakModal';
 import exercisesData from '../../backend/data/exercises.json';
 
 const WorkoutPlanDashboard = () => {
   const navigate = useNavigate();
   const { workouts, deleteWorkout, startWorkout } = useWorkout();
+  const { streak, workoutHistory, loading } = useWorkoutHistory();
   const [workoutToDelete, setWorkoutToDelete] = useState(null);
+  const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
 
   // Default workout template
   const defaultWorkout = {
@@ -171,6 +175,29 @@ const WorkoutPlanDashboard = () => {
           </button>
         </div>
 
+        {/* Streak Summary Card */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-orange-500">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold flex items-center">
+                <span className="text-3xl mr-2">🔥</span>
+                <span>{loading ? "Loading..." : `${streak}-Day Streak`}</span>
+              </h2>
+              <p className="text-gray-600 mt-1">
+                {streak > 0 
+                  ? "Keep up the great work!" 
+                  : "Complete a workout today to start your streak!"}
+              </p>
+            </div>
+            <button
+              onClick={() => setIsStreakModalOpen(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View History
+            </button>
+          </div>
+        </div>
+
         {/* General Workouts */}
         <h2 className="text-2xl font-semibold mb-4">General Workouts</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -270,6 +297,12 @@ const WorkoutPlanDashboard = () => {
           onConfirm={confirmDelete}
           title="Delete Workout?"
           message={`Are you sure you want to delete "${workoutToDelete?.name}"? This action cannot be undone.`}
+        />
+
+        {/* Streak Modal */}
+        <StreakModal
+          isOpen={isStreakModalOpen}
+          onClose={() => setIsStreakModalOpen(false)}
         />
       </div>
     </div>

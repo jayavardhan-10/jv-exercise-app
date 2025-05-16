@@ -16,6 +16,12 @@ export const WorkoutHistoryProvider = ({ children }) => {
   const { user } = useAuth();
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [streak, setStreak] = useState(0);
+  const [streakData, setStreakData] = useState({
+    lastWorkout: null,
+    streakDates: [],
+    totalWorkouts: 0,
+    longestStreak: 0
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,8 +36,14 @@ export const WorkoutHistoryProvider = ({ children }) => {
       const history = await workoutHistoryService.getWorkoutHistory(user.uid);
       setWorkoutHistory(history);
       
-      const streakData = await workoutHistoryService.getStreakData(user.uid);
-      setStreak(streakData.streak);
+      const streakResponse = await workoutHistoryService.getStreakData(user.uid);
+      setStreak(streakResponse.streak);
+      setStreakData({
+        lastWorkout: streakResponse.lastWorkout,
+        streakDates: streakResponse.streakDates || [],
+        totalWorkouts: streakResponse.totalWorkouts || 0,
+        longestStreak: streakResponse.longestStreak || 0
+      });
     } catch (error) {
       console.error('Error loading workout history:', error);
     } finally {
@@ -60,6 +72,7 @@ export const WorkoutHistoryProvider = ({ children }) => {
   const value = {
     workoutHistory,
     streak,
+    streakData,
     loading,
     saveWorkout,
     refreshHistory: loadWorkoutHistory

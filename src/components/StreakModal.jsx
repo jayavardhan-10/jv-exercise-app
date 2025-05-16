@@ -1,35 +1,46 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { useWorkoutHistory } from '../context/WorkoutHistoryContext';
 
-const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
+const StreakModal = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('streak');
+  const { workoutHistory, streak, streakData, loading } = useWorkoutHistory();
   
   console.log('[DEBUG] Workout history in StreakModal:', workoutHistory);
+  console.log('[DEBUG] Streak data:', streakData);
 
-  // Calculate streak
-  const calculateStreak = () => {
-    if (!workoutHistory?.length) return 0;
+  // Format time properly (convert minutes to MM:SS format)
+  const formatTime = (minutes) => {
+    if (!minutes) return '0 min';
     
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Convert to integer minutes and seconds
+    const mins = Math.floor(minutes);
+    const secs = Math.round((minutes - mins) * 60);
     
-    let streak = 0;
-    let currentDate = today;
-    
-    while (true) {
-      const hasWorkout = workoutHistory.some(workout => {
-        const workoutDate = new Date(workout.date);
-        workoutDate.setHours(0, 0, 0, 0);
-        return workoutDate.getTime() === currentDate.getTime();
-      });
-      
-      if (!hasWorkout) break;
-      streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
+    if (mins === 0) {
+      return `${secs} sec`;
+    } else if (secs === 0) {
+      return `${mins} min`;
+    } else {
+      return `${mins}:${secs.toString().padStart(2, '0')} min`;
     }
-    
-    return streak;
+  };
+
+  // Format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
+  // Format time (HH:mm)
+  const formatStartTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false });
   };
 
   // Get recent workouts
@@ -61,7 +72,28 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
     return Math.min(3, Math.ceil((duration / 20) + (exercises / 4)));
   };
 
+  // Get streak dates in Date format
+  const getStreakDates = () => {
+    return streakData.streakDates?.map(dateStr => new Date(dateStr)) || [];
+  };
+
+  // Check if date is in streak
+  const isDateInStreak = (date) => {
+    return streakData.streakDates?.includes(date.toISOString().split('T')[0]);
+  };
+
   if (!isOpen) return null;
+
+  // Show loading state if data is not ready
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(3px)' }}>
+        <div className="bg-white rounded-2xl p-8 w-full max-w-lg sm:max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col items-center justify-center">
+          <span className="text-xl text-blue-600 font-semibold">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(3px)' }}>
@@ -107,10 +139,53 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">🔥</span>
                 <h3 className="text-xl font-bold text-orange-800">
-                  {calculateStreak()}-Day Streak
+                  {`${streak}-Day Streak`}
                 </h3>
               </div>
-              <p className="text-orange-600 text-center">Keep up the great work!</p>
+              <p className="text-orange-600 text-center">
+                {streak > 0 
+                  ? "Keep up the great work!" 
+                  : "Complete a workout today to start your streak!"}
+              </p>
+              
+              {/* Streak Visualization */}
+              {streak > 0 && (
+                <div className="w-full mt-4">
+                  <div className="flex justify-center gap-1 sm:gap-2 overflow-x-auto py-2">
+                    {getStreakDates().map((date, index) => (
+                      <div 
+                        key={index} 
+                        className="flex flex-col items-center min-w-[40px]"
+                        title={date.toLocaleDateString()}
+                      >
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold mb-1">
+                          {date.getDate()}
+                        </div>
+                        <span className="text-xs text-orange-800">
+                          {date.toLocaleDateString(undefined, { weekday: 'short' })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Stats Summary */}
+            <div className="bg-blue-50 rounded-xl p-4 sm:p-6">
+              <h3 className="text-lg font-semibold mb-3">Your Stats</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <p className="text-sm text-gray-600">Total Workouts</p>
+                  <p className="text-2xl font-bold text-blue-600">{streakData.totalWorkouts || 0}</p>
+                </div>
+                <div className="bg-white rounded-lg p-3 text-center">
+                  <p className="text-sm text-gray-600">Last Workout</p>
+                  <p className="text-xl font-bold text-blue-600">
+                    {streakData.lastWorkout ? formatDate(streakData.lastWorkout) : 'None'}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Recent Workouts */}
@@ -123,13 +198,13 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
                       <div>
                         <h4 className="font-semibold text-base sm:text-lg">{workout.workoutName || workout.name || "Workout"}</h4>
                         <p className="text-xs sm:text-sm text-gray-600">
-                          {new Date(workout.date).toLocaleDateString()}
+                          {formatStartTime(workout.date)}
                         </p>
                       </div>
                       <div className="text-right mt-2 sm:mt-0">
                         <p className="font-medium text-sm sm:text-base">{workout.totalExercises || workout.exercises?.length || 0} exercises</p>
                         <p className="text-xs sm:text-sm text-gray-600">
-                          {workout.duration ? `${workout.duration} min` : 'Custom'}
+                          {formatTime(workout.duration)}
                         </p>
                       </div>
                     </div>
@@ -149,6 +224,7 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
               <Calendar
                 className="premium-calendar"
                 tileClassName={({ date }) => {
+                  if (isDateInStreak(date)) return 'streak-day';
                   return hasWorkoutOnDate(date) ? 'workout-day' : '';
                 }}
                 tileContent={({ date, view }) => {
@@ -158,6 +234,11 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
                   if (intensity === 0) return null;
                   
                   // Create a colored circle with size based on intensity
+                  const isStreakDay = isDateInStreak(date);
+                  const bgColor = isStreakDay 
+                    ? (intensity === 1 ? '#f97316' : intensity === 2 ? '#ea580c' : '#c2410c')
+                    : (intensity === 1 ? '#22c55e' : intensity === 2 ? '#16a34a' : '#15803d');
+                  
                   return (
                     <div 
                       style={{
@@ -167,9 +248,9 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
                         transform: 'translate(-50%, -50%)',
                         width: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
                         height: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
-                        backgroundColor: intensity === 1 ? '#4ade80' : intensity === 2 ? '#22c55e' : '#16a34a',
+                        backgroundColor: bgColor,
                         borderRadius: '50%',
-                        opacity: intensity === 1 ? '0.25' : intensity === 2 ? '0.35' : '0.45',
+                        opacity: intensity === 1 ? '0.4' : intensity === 2 ? '0.5' : '0.6',
                         zIndex: '-1',
                         boxShadow: 'inset 0 0 10px rgba(0,0,0,0.05)'
                       }}
@@ -186,17 +267,19 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 }
-                next2Label={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                  </svg>
-                }
-                prev2Label={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />
-                  </svg>
-                }
               />
+            </div>
+            
+            {/* Legend */}
+            <div className="flex justify-center gap-4 text-sm">
+              <div className="flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-green-500 opacity-50 mr-1"></span>
+                <span>Regular Workout</span>
+              </div>
+              <div className="flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-orange-500 opacity-50 mr-1"></span>
+                <span>Streak Workout</span>
+              </div>
             </div>
           </div>
         )}
@@ -317,6 +400,11 @@ const StreakModal = ({ isOpen, onClose, workoutHistory = [] }) => {
         .premium-calendar .workout-day {
           font-weight: 700;
           color: #1a202c;
+        }
+        
+        .premium-calendar .streak-day {
+          font-weight: 700;
+          color: #c2410c;
         }
         
         @media (max-width: 640px) {

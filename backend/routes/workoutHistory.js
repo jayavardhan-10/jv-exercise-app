@@ -22,22 +22,76 @@ router.get('/:userId', async (req, res) => {
 
 // Get current streak for a user
 router.get('/:userId/streak', async (req, res) => {
-  const { userId } = req.params;
-  const workouts = await WorkoutHistory.find({ userId }).sort({ date: -1 });
-  let streak = 0;
-  let currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
-  for (const workout of workouts) {
-    const workoutDate = new Date(workout.date);
-    workoutDate.setHours(0, 0, 0, 0);
-    if (workoutDate.getTime() === currentDate.getTime()) {
-      streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
-    } else if (workoutDate < currentDate) {
-      break;
+  try {
+    const { userId } = req.params;
+    const workouts = await WorkoutHistory.find({ userId }).sort({ date: -1 });
+    
+    if (workouts.length === 0) {
+      return res.json({ 
+        streak: 0,
+        lastWorkout: null,
+        streakDates: [],
+        totalWorkouts: 0,
+        longestStreak: 0
+      });
     }
+    
+    // Get unique workout dates (in case of multiple workouts per day)
+    const workoutDates = [...new Set(
+      workouts.map(workout => {
+        const date = new Date(workout.date);
+        return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+      })
+    )];
+    
+    // Calculate current streak
+    let streak = 0;
+    let streakDates = [];
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
+    const hasWorkoutToday = workoutDates.includes(todayStr);
+    let currentDate = new Date(today);
+    if (!hasWorkoutToday) {
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+    while (true) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      if (!workoutDates.includes(dateStr)) {
+        break;
+      }
+      streak++;
+      streakDates.push(dateStr);
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+    // Calculate longest streak ever
+    let longestStreak = 0;
+    let tempStreak = 1;
+    for (let i = 1; i < workoutDates.length; i++) {
+      const prev = new Date(workoutDates[i - 1]);
+      const curr = new Date(workoutDates[i]);
+      const diff = (prev - curr) / (1000 * 60 * 60 * 24);
+      if (diff === 1) {
+        tempStreak++;
+      } else {
+        if (tempStreak > longestStreak) longestStreak = tempStreak;
+        tempStreak = 1;
+      }
+    }
+    if (tempStreak > longestStreak) longestStreak = tempStreak;
+    // Get last workout date
+    const lastWorkout = workouts[0].date;
+    res.json({ 
+      streak,
+      lastWorkout,
+      streakDates,
+      totalWorkouts: workouts.length,
+      longestStreak
+    });
+  } catch (err) {
+    console.error('Error calculating streak:', err);
+    res.status(500).json({ error: 'Failed to calculate streak' });
   }
-  res.json({ streak });
 });
 
 module.exports = router; 
