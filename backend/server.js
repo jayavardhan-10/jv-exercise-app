@@ -25,6 +25,7 @@ console.log('Attempting to connect to MongoDB...');
 // Import routes
 const exerciseRoutes = require('./routes/exercises');
 const workoutRoutes = require('./routes/workouts');
+const workoutHistoryRoutes = require('./routes/workoutHistory');
 
 async function connectDB() {
     try {
@@ -55,6 +56,7 @@ const checkDbConnection = (req, res, next) => {
 // Mount routes
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/workout-history', workoutHistoryRoutes);
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

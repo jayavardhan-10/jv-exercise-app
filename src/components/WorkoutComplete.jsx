@@ -1,13 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkout } from '../context/WorkoutContext';
+import { useWorkoutHistory } from '../context/WorkoutHistoryContext';
 import confetti from 'canvas-confetti';
 
 const WorkoutComplete = () => {
   const navigate = useNavigate();
   const { getTotalWorkoutTime, currentWorkout } = useWorkout();
+  const { saveWorkout } = useWorkoutHistory();
+  const hasSaved = useRef(false);
 
   useEffect(() => {
+    // Save workout only once
+    if (!hasSaved.current && currentWorkout) {
+      hasSaved.current = true;
+      saveWorkout({
+        workoutId: currentWorkout.id || currentWorkout._id || 'custom',
+        workoutName: currentWorkout.name || 'Custom Workout',
+        date: new Date(),
+        duration: getTotalWorkoutTime() / 60, // convert seconds to minutes
+        exercises: currentWorkout.exercises || [],
+        totalExercises: currentWorkout.exercises?.length || 0,
+        intensity: Math.round((getTotalWorkoutTime() / 60) + (currentWorkout.exercises?.length || 0))
+      });
+    }
     // Trigger confetti animation
     const duration = 3000;
     const animationEnd = Date.now() + duration;
@@ -38,7 +54,7 @@ const WorkoutComplete = () => {
     }, 250);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentWorkout, getTotalWorkoutTime, saveWorkout]);
 
   const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60);
