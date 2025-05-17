@@ -40,3 +40,8 @@ torse twists
 
 new: 
 child's pose: https://drive.google.com/file/d/1lxKNmWtn65_Ts-0k_FxBs4GEIKVGt9KC/view?usp=sharing
+
+
+
+MONGODB_URI=mongodb+srv://jayavardhanboguda10:Jayavardhan10@jvexerciseappmongo.xhmhjqn.mongodb.net/jvexerciseappmongo?retryWrites=true&w=majority&appName=jvexerciseappmongo&ssl=true&tlsAllowInvalidCertificates=true
+PORT=5000

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
 // Add immediate logging to check if the file is being executed
 console.log('Starting server...');
@@ -18,8 +19,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection - using local connection for development
-const uri = 'mongodb://localhost:27017/exerciseApp';
+// MongoDB connection
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/exerciseApp';
 console.log('Attempting to connect to MongoDB...');
 
 // Import routes
@@ -54,9 +55,18 @@ const checkDbConnection = (req, res, next) => {
 };
 
 // Mount routes
-app.use('/api/exercises', exerciseRoutes);
-app.use('/api/workouts', workoutRoutes);
-app.use('/api/workout-history', workoutHistoryRoutes);
+app.use('/api/exercises', checkDbConnection, exerciseRoutes);
+app.use('/api/workouts', checkDbConnection, workoutRoutes);
+app.use('/api/workout-history', checkDbConnection, workoutHistoryRoutes);
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../dist')));
+    
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
+}
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
