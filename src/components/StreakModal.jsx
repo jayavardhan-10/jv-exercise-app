@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useWorkoutHistory } from '../context/WorkoutHistoryContext';
@@ -6,9 +6,25 @@ import { useWorkoutHistory } from '../context/WorkoutHistoryContext';
 const StreakModal = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('streak');
   const { workoutHistory, streak, streakData, loading } = useWorkoutHistory();
+  const [debugInfo, setDebugInfo] = useState({});
   
-  console.log('[DEBUG] Workout history in StreakModal:', workoutHistory);
-  console.log('[DEBUG] Streak data:', streakData);
+  // Debug logs
+  useEffect(() => {
+    console.log('[DEBUG] workoutHistory:', workoutHistory);
+    console.log('[DEBUG] streak:', streak);
+    console.log('[DEBUG] streakData:', streakData);
+    console.log('[DEBUG] loading:', loading);
+    
+    // Update debug info for display
+    setDebugInfo({
+      historyLength: workoutHistory?.length || 0,
+      streak: streak,
+      streakDatesLength: streakData?.streakDates?.length || 0,
+      totalWorkouts: streakData?.totalWorkouts || 0,
+      longestStreak: streakData?.longestStreak || 0,
+      lastWorkout: streakData?.lastWorkout ? new Date(streakData.lastWorkout).toLocaleString() : 'None'
+    });
+  }, [workoutHistory, streak, streakData, loading]);
 
   // Format time properly (convert minutes to MM:SS format)
   const formatTime = (minutes) => {
@@ -29,6 +45,7 @@ const StreakModal = ({ isOpen, onClose }) => {
 
   // Format date
   const formatDate = (dateString) => {
+    if (!dateString) return 'None';
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, { 
       weekday: 'short', 
@@ -50,14 +67,16 @@ const StreakModal = ({ isOpen, onClose }) => {
 
   // Check if a date has a workout
   const hasWorkoutOnDate = (date) => {
-    return workoutHistory.some(workout => {
+    return workoutHistory?.some(workout => {
       const workoutDate = new Date(workout.date);
       return workoutDate.toDateString() === date.toDateString();
-    });
+    }) || false;
   };
 
   // Get workout intensity (1-3) based on duration and exercises
   const getWorkoutIntensity = (date) => {
+    if (!workoutHistory) return 0;
+    
     const workout = workoutHistory.find(w => {
       const workoutDate = new Date(w.date);
       return workoutDate.toDateString() === date.toDateString();
@@ -74,12 +93,89 @@ const StreakModal = ({ isOpen, onClose }) => {
 
   // Get streak dates in Date format
   const getStreakDates = () => {
-    return streakData.streakDates?.map(dateStr => new Date(dateStr)) || [];
+    return streakData?.streakDates?.map(dateStr => new Date(dateStr)) || [];
   };
 
   // Check if date is in streak
   const isDateInStreak = (date) => {
-    return streakData.streakDates?.includes(date.toISOString().split('T')[0]);
+    if (!streakData?.streakDates) return false;
+    return streakData.streakDates.includes(date.toISOString().split('T')[0]);
+  };
+
+  // Calculate longest streak manually if not available in backend
+  const calculateLongestStreak = () => {
+    if (streakData?.longestStreak) return streakData.longestStreak;
+    if (!workoutHistory?.length) return 0;
+    
+    // Get unique workout dates
+    const uniqueDates = [...new Set(
+      workoutHistory.map(w => new Date(w.date).toISOString().split('T')[0])
+    )].sort();
+    
+    let maxStreak = 0;
+    let currentStreak = 1;
+    
+    for (let i = 1; i < uniqueDates.length; i++) {
+      const prevDate = new Date(uniqueDates[i-1]);
+      const currDate = new Date(uniqueDates[i]);
+      const diffDays = Math.floor((currDate - prevDate) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 1) {
+        currentStreak++;
+      } else {
+        maxStreak = Math.max(maxStreak, currentStreak);
+        currentStreak = 1;
+      }
+    }
+    
+    maxStreak = Math.max(maxStreak, currentStreak);
+    return maxStreak;
+  };
+  
+  // Use these reliable values instead of potentially missing streakData values
+  const longestStreak = streakData?.longestStreak || calculateLongestStreak();
+  const totalWorkouts = streakData?.totalWorkouts || workoutHistory?.length || 0;
+  const lastWorkout = streakData?.lastWorkout || (workoutHistory?.length > 0 ? workoutHistory[0].date : null);
+
+  // Helper: Get start of week (Sunday)
+  const getStartOfWeek = (date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+  };
+
+  // Helper: Get end of week (Saturday)
+  const getEndOfWeek = (date) => {
+    const d = new Date(date);
+    d.setHours(23, 59, 59, 999);
+    d.setDate(d.getDate() + (6 - d.getDay()));
+    return d;
+  };
+
+  // Get workouts for this week (Sunday to Saturday)
+  const now = new Date();
+  const weekStart = getStartOfWeek(now);
+  const weekEnd = getEndOfWeek(now);
+  const workoutsThisWeek = workoutHistory?.filter(w => {
+    const workoutDate = new Date(w.date);
+    return workoutDate >= weekStart && workoutDate <= weekEnd;
+  }) || [];
+  const totalWorkoutsThisWeek = workoutsThisWeek.length;
+
+  // Format date for recent workouts and last workout
+  const formatRecentDate = (dateString) => {
+    if (!dateString) return 'None';
+    const date = new Date(dateString);
+    const now = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isToday = date.toDateString() === now.toDateString();
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+    const time = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false });
+    if (isToday) return `Today ${time}`;
+    if (isYesterday) return `Yesterday ${time}`;
+    return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) + ` ${time}`;
   };
 
   if (!isOpen) return null;
@@ -148,6 +244,11 @@ const StreakModal = ({ isOpen, onClose }) => {
                   : "Complete a workout today to start your streak!"}
               </p>
               
+              {/* Longest streak info */}
+              <p className="text-xs text-gray-700 mt-2">
+                Longest streak: <span className="font-semibold">{longestStreak} {longestStreak === 1 ? 'day' : 'days'}</span>
+              </p>
+              
               {/* Streak Visualization */}
               {streak > 0 && (
                 <div className="w-full mt-4">
@@ -173,16 +274,16 @@ const StreakModal = ({ isOpen, onClose }) => {
 
             {/* Stats Summary */}
             <div className="bg-blue-50 rounded-xl p-4 sm:p-6">
-              <h3 className="text-lg font-semibold mb-3">Your Stats</h3>
+              <h3 className="text-lg font-semibold mb-3">Workouts This Week</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white rounded-lg p-3 text-center">
-                  <p className="text-sm text-gray-600">Total Workouts</p>
-                  <p className="text-2xl font-bold text-blue-600">{streakData.totalWorkouts || 0}</p>
+                  <p className="text-sm text-gray-600">Workouts This Week</p>
+                  <p className="text-2xl font-bold text-blue-600">{totalWorkoutsThisWeek}</p>
                 </div>
                 <div className="bg-white rounded-lg p-3 text-center">
                   <p className="text-sm text-gray-600">Last Workout</p>
                   <p className="text-xl font-bold text-blue-600">
-                    {streakData.lastWorkout ? formatDate(streakData.lastWorkout) : 'None'}
+                    {formatRecentDate(lastWorkout)}
                   </p>
                 </div>
               </div>
@@ -198,7 +299,7 @@ const StreakModal = ({ isOpen, onClose }) => {
                       <div>
                         <h4 className="font-semibold text-base sm:text-lg">{workout.workoutName || workout.name || "Workout"}</h4>
                         <p className="text-xs sm:text-sm text-gray-600">
-                          {formatStartTime(workout.date)}
+                          {formatRecentDate(workout.date)}
                         </p>
                       </div>
                       <div className="text-right mt-2 sm:mt-0">
