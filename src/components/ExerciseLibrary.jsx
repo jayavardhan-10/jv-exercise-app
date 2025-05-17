@@ -23,7 +23,7 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
       setLoading(false);
     } catch (err) {
       console.error('Error loading exercises:', err);
-      setError('Failed to load exercises');
+      setError(`Failed to load exercises: ${err.message}`);
       setLoading(false);
     }
   };

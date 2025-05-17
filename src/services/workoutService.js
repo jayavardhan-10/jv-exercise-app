@@ -1,4 +1,10 @@
-const API_URL = 'http://localhost:5000/api';
+// Determine if we're in development or production
+const isProduction = import.meta.env.PROD;
+const API_URL = import.meta.env.VITE_API_URL || 
+  (isProduction 
+    ? 'https://jv-exercise-backend.onrender.com/api' 
+    : 'http://localhost:5000/api');
+console.log('Workout Service API URL:', API_URL);
 
 export const workoutService = {
   // Get all workouts

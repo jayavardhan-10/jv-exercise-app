@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://jv-exercise-backend.onrender.com/api';
+// Determine if we're in development or production
+const isProduction = import.meta.env.PROD;
+const API_URL = import.meta.env.VITE_API_URL || 
+  (isProduction 
+    ? 'https://jv-exercise-backend.onrender.com/api' 
+    : 'http://localhost:5000/api');
+console.log('WorkoutHistory API URL:', API_URL);
 
 export const workoutHistoryService = {
   // Save a completed workout

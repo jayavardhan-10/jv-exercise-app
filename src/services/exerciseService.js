@@ -1,12 +1,29 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://jv-exercise-backend.onrender.com/api';
+// Determine if we're in development or production
+const isProduction = import.meta.env.PROD;
+const API_URL = import.meta.env.VITE_API_URL || 
+  (isProduction 
+    ? 'https://jv-exercise-backend.onrender.com/api' 
+    : 'http://localhost:5000/api');
+console.log('Environment:', isProduction ? 'production' : 'development');
+console.log('API URL:', API_URL);
 
 export const exerciseService = {
   // Get all exercises
   getAllExercises: async () => {
     try {
+      console.log('Fetching exercises from:', `${API_URL}/exercises`);
       const response = await fetch(`${API_URL}/exercises`);
-      if (!response.ok) throw new Error('Failed to fetch exercises');
-      return await response.json();
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to fetch exercises: ${response.status} ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('Received data length:', data.length);
+      return data;
     } catch (error) {
       console.error('Error fetching exercises:', error);
       throw error;

@@ -16,7 +16,25 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://localhost:5176',
+    'http://localhost:5177',
+    'http://localhost:5178',
+    'http://localhost:5179',
+    'http://localhost:5180',
+    'http://localhost:5181',
+    'http://localhost:5182',
+    'http://localhost:5183',
+    'http://localhost:5184',
+    'https://jv-exercise-app.onrender.com'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // MongoDB connection
@@ -109,6 +127,19 @@ app.get('/api/test', (req, res) => {
         message: 'Backend is working!',
         dbStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
     });
+});
+
+// Debug endpoint to count exercises
+app.get('/api/count-exercises', async (req, res) => {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.json({ count: 0, error: 'Database not connected' });
+        }
+        const count = await Exercise.countDocuments();
+        res.json({ count, message: `Found ${count} exercises in database` });
+    } catch (err) {
+        res.json({ count: 0, error: err.message });
+    }
 });
 
 // Start server

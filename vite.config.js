@@ -10,5 +10,9 @@ export default defineConfig({
     strictPort: true,
     host: true,
     allowedHosts: ['jv-exercise-frontend.onrender.com', '.onrender.com']
+  },
+  define: {
+    // Make sure environment variables are properly exposed
+    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL)
   }
 })
