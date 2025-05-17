@@ -30,12 +30,19 @@ app.use(cors({
     'http://localhost:5182',
     'http://localhost:5183',
     'http://localhost:5184',
-    'https://jv-exercise-app.onrender.com'
+    'https://jv-exercise-frontend.onrender.com',
+    'https://jv-exercise-app.onrender.com',
+    // Allow any Render subdomain for testing
+    '.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.use(express.json());
+
+// Add OPTIONS pre-flight handling
+app.options('*', cors());
 
 // MongoDB connection
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/exerciseApp';

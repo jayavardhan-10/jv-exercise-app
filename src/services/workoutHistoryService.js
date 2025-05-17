@@ -2,10 +2,20 @@ import axios from 'axios';
 
 // Determine if we're in development or production
 const isProduction = import.meta.env.PROD;
-const API_URL = import.meta.env.VITE_API_URL || 
+// Make sure we always have the /api suffix
+let baseUrl = import.meta.env.VITE_API_URL || 
   (isProduction 
-    ? 'https://jv-exercise-backend.onrender.com/api' 
-    : 'http://localhost:5000/api');
+    ? 'https://jv-exercise-backend.onrender.com' 
+    : 'http://localhost:5000');
+
+// Ensure URL doesn't end with trailing slash
+if (baseUrl.endsWith('/')) {
+  baseUrl = baseUrl.slice(0, -1);
+}
+
+// Ensure URL has /api path
+const API_URL = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+
 console.log('WorkoutHistory API URL:', API_URL);
 
 export const workoutHistoryService = {
