@@ -210,11 +210,21 @@ const EditWorkout = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <img
-                        src={exercise.gifUrl}
-                        alt={exercise.name}
-                        className="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-xl shadow border border-gray-200 bg-gray-50"
-                      />
+                      {exercise.name === 'High Knees' ? (
+                        <div className="gif-white-bg">
+                          <img
+                            src={exercise.gifUrl}
+                            alt={exercise.name}
+                            className="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-xl shadow border border-gray-200 bg-gray-50"
+                          />
+                        </div>
+                      ) : (
+                        <img
+                          src={exercise.gifUrl}
+                          alt={exercise.name}
+                          className="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-xl shadow border border-gray-200 bg-gray-50"
+                        />
+                      )}
                     </div>
                   </div>
                 ))}

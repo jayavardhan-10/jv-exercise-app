@@ -78,11 +78,21 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
             onClick={() => isSelectionMode && onExerciseSelect(exercise)}
           >
             <div className="aspect-w-16 aspect-h-9 bg-gray-100">
-              <img
-                src={exercise.gifUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
-                alt={exercise.name}
-                className="object-cover w-full h-full"
-              />
+              {exercise.name === 'High Knees' ? (
+                <div className="gif-white-bg">
+                  <img
+                    src={exercise.gifUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
+                    alt={exercise.name}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={exercise.gifUrl || 'https://via.placeholder.com/400x300?text=No+Image'}
+                  alt={exercise.name}
+                  className="object-cover w-full h-full"
+                />
+              )}
             </div>
             <div className="p-4">
               <h3 className="text-xl font-semibold mb-2">{exercise.name}</h3>

@@ -146,11 +146,21 @@ const WorkoutForm = ({ onSubmit, initialData = null }) => {
                 
                 {/* Preview GIF */}
                 <div className="mt-4">
-                  <img
-                    src={exercise.gifUrl}
-                    alt={exercise.name}
-                    className="w-32 h-32 object-cover rounded-lg"
-                  />
+                  {exercise.name === 'High Knees' ? (
+                    <div className="gif-white-bg">
+                      <img
+                        src={exercise.gifUrl}
+                        alt={exercise.name}
+                        className="w-32 h-32 object-cover rounded-lg"
+                      />
+                    </div>
+                  ) : (
+                    <img
+                      src={exercise.gifUrl}
+                      alt={exercise.name}
+                      className="w-32 h-32 object-cover rounded-lg"
+                    />
+                  )}
                 </div>
               </div>
             ))}

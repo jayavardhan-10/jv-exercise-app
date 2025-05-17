@@ -77,13 +77,16 @@ const WorkoutSession = () => {
         <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
           <h2 className="text-3xl font-bold text-center mb-6">Workout Complete! 🎉</h2>
           <div className="space-y-4">
-            <div className="text-center">
-              <p className="text-lg">Total Time:</p>
-              <p className="text-3xl font-bold">{Math.floor(getTotalWorkoutTime() / 60)} minutes</p>
+            <div className="text-center p-4 rounded-lg mb-2 bg-green-50 dark:bg-green-50">
+              <p className="text-lg font-bold" style={{ color: '#18181b', fontWeight: 700, textShadow: '0 1px 0 #fff' }}>Exercises Completed</p>
+              <p className="text-3xl font-bold text-green-700">{currentWorkout.exercises.length}</p>
             </div>
-            <div className="text-center">
-              <p className="text-lg">Exercises Completed:</p>
-              <p className="text-3xl font-bold">{currentWorkout.exercises.length}</p>
+            <div className="text-center p-4 rounded-lg mb-2 bg-yellow-50 dark:bg-yellow-50">
+              <span className="text-lg font-bold" style={{ color: '#18181b', fontWeight: 700, textShadow: '0 1px 0 #fff' }}>Current Streak</span>
+              <div className="flex items-center justify-center gap-2 mt-1">
+                <span role="img" aria-label="streak">🔥</span>
+                <span className="text-2xl font-bold text-orange-600">{streak} days</span>
+              </div>
             </div>
             <button
               onClick={() => navigate('/dashboard')}
@@ -152,14 +155,20 @@ const WorkoutSession = () => {
               <h2 className="text-3xl font-bold mt-2">{currentExercise.name}</h2>
             </div>
 
-            {currentExercise.gifUrl && (
-              <div className="flex justify-center mb-8">
+            {currentExercise.name === 'High Knees' ? (
+              <div className="gif-white-bg">
                 <img
                   src={currentExercise.gifUrl}
                   alt={currentExercise.name}
                   className="max-w-full h-64 object-contain rounded-lg"
                 />
               </div>
+            ) : (
+              <img
+                src={currentExercise.gifUrl}
+                alt={currentExercise.name}
+                className="max-w-full h-64 object-contain rounded-lg"
+              />
             )}
 
             <div className="text-center mb-8">

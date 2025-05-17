@@ -96,7 +96,7 @@ const WorkoutComplete = () => {
             </p>
           </div>
           <div className="bg-green-50 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 className="text-xl font-bold mb-2" style={{ color: '#18181b', fontWeight: 700 }}>
               Exercises Completed
             </h2>
             <p className="text-4xl font-bold text-green-600">
@@ -109,7 +109,7 @@ const WorkoutComplete = () => {
           <div className="flex items-center justify-center">
             <span className="text-4xl mr-3">🔥</span>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-1">
+              <h2 className="text-xl font-bold mb-1" style={{ color: '#18181b', fontWeight: 700 }}>
                 Current Streak
               </h2>
               <p className="text-4xl font-bold text-orange-600">

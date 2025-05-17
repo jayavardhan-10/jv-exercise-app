@@ -174,11 +174,21 @@ const ExerciseExecutionScreen = () => {
           
           <div className="flex justify-center mb-6 sm:mb-8">
             {exercise.gifUrl ? (
-              <img
-                src={exercise.gifUrl}
-                alt={exercise.name}
-                className="w-32 h-32 sm:w-64 sm:h-64 object-contain rounded-lg shadow transition-all duration-300"
-              />
+              (exercise.name === 'High Knees' ? (
+                <div className="gif-white-bg">
+                  <img
+                    src={exercise.gifUrl}
+                    alt={exercise.name}
+                    className="w-32 h-32 sm:w-64 sm:h-64 object-contain rounded-lg shadow transition-all duration-300"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={exercise.gifUrl}
+                  alt={exercise.name}
+                  className="w-32 h-32 sm:w-64 sm:h-64 object-contain rounded-lg shadow transition-all duration-300"
+                />
+              ))
             ) : (
               <div className="bg-gray-100 w-32 h-32 sm:w-64 sm:h-64 flex items-center justify-center rounded-lg">
                 <p className="text-gray-500">No animation available</p>

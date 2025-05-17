@@ -178,6 +178,20 @@ const StreakModal = ({ isOpen, onClose }) => {
     return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) + ` ${time}`;
   };
 
+  // Helper: Get workout count for a date
+  const getWorkoutCount = (date) => {
+    return workoutHistory?.filter(w => {
+      const workoutDate = new Date(w.date);
+      return workoutDate.toDateString() === date.toDateString();
+    }).length || 0;
+  };
+
+  // Helper: Is today
+  const isToday = (date) => {
+    const now = new Date();
+    return date.toDateString() === now.toDateString();
+  };
+
   if (!isOpen) return null;
 
   // Show loading state if data is not ready
@@ -231,7 +245,7 @@ const StreakModal = ({ isOpen, onClose }) => {
         {activeTab === 'streak' && (
           <div className="space-y-6">
             {/* Current Streak */}
-            <div className="bg-gradient-to-r from-orange-200 to-orange-50 rounded-xl p-6 flex flex-col items-center">
+            <div className="streak-card rounded-xl p-5 flex flex-col items-center mb-6">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">🔥</span>
                 <h3 className="text-xl font-bold text-orange-800">
@@ -314,6 +328,14 @@ const StreakModal = ({ isOpen, onClose }) => {
                   <p className="text-gray-500 text-center py-4">No recent workouts found</p>
                 )}
               </div>
+              <div className="flex justify-center mt-4">
+                <button
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                  onClick={() => window.location.href = '/history'}
+                >
+                  View All
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -321,42 +343,72 @@ const StreakModal = ({ isOpen, onClose }) => {
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
           <div className="space-y-6">
-            <div className="rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 p-4">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <Calendar
                 className="premium-calendar"
                 tileClassName={({ date }) => {
-                  if (isDateInStreak(date)) return 'streak-day';
-                  return hasWorkoutOnDate(date) ? 'workout-day' : '';
+                  let classes = '';
+                  if (isDateInStreak(date)) classes += ' streak-day';
+                  else if (hasWorkoutOnDate(date)) classes += ' workout-day';
+                  if (date && activeTab === 'calendar' && date.toDateString() === (new Date().toDateString())) classes += ' today-highlight';
+                  if (date && date.toDateString() === (new Date().toDateString())) classes += ' today-highlight';
+                  return classes.trim();
                 }}
                 tileContent={({ date, view }) => {
                   if (view !== 'month') return null;
-                  
-                  const intensity = getWorkoutIntensity(date);
-                  if (intensity === 0) return null;
-                  
-                  // Create a colored circle with size based on intensity
-                  const isStreakDay = isDateInStreak(date);
-                  const bgColor = isStreakDay 
-                    ? (intensity === 1 ? '#f97316' : intensity === 2 ? '#ea580c' : '#c2410c')
-                    : (intensity === 1 ? '#22c55e' : intensity === 2 ? '#16a34a' : '#15803d');
-                  
-                  return (
-                    <div 
-                      style={{
+                  const count = getWorkoutCount(date);
+                  const isSelected = date && date.toDateString() === new Date().toDateString() && activeTab === 'calendar';
+                  const isCurrentDay = isToday(date);
+                  // Today: render as a green dot (like other workout days), but text is always white
+                  if (isCurrentDay) {
+                    let bg = count > 0 ? (count === 1 ? '#4ade80' : count <= 3 ? '#22c55e' : '#16a34a') : '#e0f2fe';
+                    let color = '#fff';
+                    return (
+                      <div style={{
                         position: 'absolute',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
-                        height: intensity === 1 ? '28px' : intensity === 2 ? '32px' : '36px',
-                        backgroundColor: bgColor,
+                        width: '32px',
+                        height: '32px',
                         borderRadius: '50%',
-                        opacity: intensity === 1 ? '0.4' : intensity === 2 ? '0.5' : '0.6',
-                        zIndex: '-1',
-                        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.05)'
-                      }}
-                    />
-                  );
+                        background: bg,
+                        zIndex: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                        color
+                      }}>{date.getDate()}</div>
+                    );
+                  }
+                  // Not today, workout: green heatmap
+                  if (!isCurrentDay && count > 0) {
+                    let bg = '#bbf7d0';
+                    let color = '#166534';
+                    if (count === 2 || count === 3) { bg = '#4ade80'; color = '#065f46'; }
+                    if (count >= 4) { bg = '#22c55e'; color = '#fff'; }
+                    return (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: bg,
+                        zIndex: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        <span style={{ color: color, fontWeight: 700, fontSize: '1rem' }}>{date.getDate()}</span>
+                      </div>
+                    );
+                  }
+                  // Selected day: blue with white text (handled by calendar)
+                  return null;
                 }}
                 nextLabel={
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -368,6 +420,12 @@ const StreakModal = ({ isOpen, onClose }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 }
+                onClickDay={date => {
+                  const yyyy = date.getFullYear();
+                  const mm = String(date.getMonth() + 1).padStart(2, '0');
+                  const dd = String(date.getDate()).padStart(2, '0');
+                  window.location.href = `/history?date=${yyyy}-${mm}-${dd}`;
+                }}
               />
             </div>
             
@@ -401,6 +459,21 @@ const StreakModal = ({ isOpen, onClose }) => {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          background: #fff !important;
+          border-radius: 16px 16px 0 0;
+        }
+        
+        .premium-calendar .react-calendar__navigation button,
+        .premium-calendar .react-calendar__navigation__label {
+          background: #fff !important;
+          color: #18181b !important;
+        }
+        
+        .dark .premium-calendar .react-calendar__navigation,
+        .dark .premium-calendar .react-calendar__navigation button,
+        .dark .premium-calendar .react-calendar__navigation__label {
+          background: #fff !important;
+          color: #18181b !important;
         }
         
         .premium-calendar .react-calendar__navigation button {
@@ -474,24 +547,27 @@ const StreakModal = ({ isOpen, onClose }) => {
         }
         
         .premium-calendar .react-calendar__tile--now {
-          background: rgba(66, 153, 225, 0.1);
-          font-weight: 700;
+          /* No border for today */
         }
         
-        .premium-calendar .react-calendar__tile--now:enabled:hover,
-        .premium-calendar .react-calendar__tile--now:enabled:focus {
-          background: rgba(66, 153, 225, 0.2);
+        .premium-calendar .today-highlight {
+          /* No shadow for today */
         }
         
         .premium-calendar .react-calendar__tile--active {
-          background: #3182ce;
-          color: white;
-          font-weight: 600;
+          background: #2563eb !important;
+          color: #fff !important;
+          font-weight: 700;
         }
         
-        .premium-calendar .react-calendar__tile--active:enabled:hover,
-        .premium-calendar .react-calendar__tile--active:enabled:focus {
-          background: #2c5282;
+        .dark .premium-calendar .react-calendar__tile--active {
+          background: #23262f !important;
+          color: #fff !important;
+          font-weight: 700;
+        }
+        
+        .dark .premium-calendar .react-calendar__tile {
+          color: #fff !important;
         }
         
         .premium-calendar .react-calendar__month-view__days__day--neighboringMonth {
@@ -500,12 +576,10 @@ const StreakModal = ({ isOpen, onClose }) => {
         
         .premium-calendar .workout-day {
           font-weight: 700;
-          color: #1a202c;
         }
         
         .premium-calendar .streak-day {
           font-weight: 700;
-          color: #c2410c;
         }
         
         @media (max-width: 640px) {

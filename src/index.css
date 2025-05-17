@@ -1,2 +1,135 @@
 @import "tailwindcss";
 
+/* Light mode variables */
+:root {
+  --bg: #f4f6fa;
+  --card-bg: #fff;
+  --text: #18181b;
+  --text-secondary: #52525b;
+  --primary: #2563eb;
+  --card-shadow: 0 2px 16px 0 rgba(0,0,0,0.06);
+  --input-bg: #f8fafc;
+  --input-border: #e5e7eb;
+}
+
+/* Dark mode variables */
+.dark {
+  --bg: #181a20;
+  --card-bg: #23262f;
+  --text: #f4f6fa;
+  --text-secondary: #a1a1aa;
+  --primary: #60a5fa;
+  --card-shadow: 0 2px 16px 0 rgba(0,0,0,0.32);
+  --input-bg: #23262f;
+  --input-border: #333646;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.card, .bg-white, .bg-blue-50, .bg-gray-100, .bg-gray-50 {
+  background: var(--card-bg) !important;
+  color: var(--text);
+  box-shadow: var(--card-shadow);
+  transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+input, textarea, select {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+  transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+
+header, .shadow, .shadow-lg, .shadow-md, .shadow-2xl {
+  background: var(--card-bg) !important;
+  color: var(--text);
+  box-shadow: var(--card-shadow) !important;
+  transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  transition: color 0.5s;
+}
+
+.text-gray-900, .text-gray-800, .text-gray-700 {
+  color: var(--text) !important;
+  transition: color 0.5s;
+}
+
+.text-gray-600, .text-gray-500, .text-gray-400 {
+  color: var(--text-secondary) !important;
+  transition: color 0.5s;
+}
+
+.bg-blue-600, .bg-blue-700, .bg-blue-900 {
+  background: var(--primary) !important;
+  transition: background-color 0.5s;
+}
+
+/* Calendar dark mode fix */
+.premium-calendar {
+  background: var(--card-bg) !important;
+  color: var(--text);
+  transition: background-color 0.5s, color 0.5s;
+}
+
+/* Smooth transition for all */
+* {
+  transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+/* Streak/Stat card fix for dark mode */
+.streak-card, .stat-card, .bg-orange-50, .bg-yellow-50, .bg-orange-100, .bg-yellow-100 {
+  background: linear-gradient(90deg, #ffe6b3 0%, #ffefcf 100%) !important;
+  color: #18181b;
+}
+.dark .streak-card, .dark .stat-card, .dark .bg-orange-50, .dark .bg-yellow-50, .dark .bg-orange-100, .dark .bg-yellow-100 {
+  background: linear-gradient(90deg, #4b2e05 0%, #7c4700 100%) !important;
+  color: #fff !important;
+  border: 1px solid #ffb84d;
+}
+
+/* Exercise rep/time tag fix */
+.exercise-tag, .reps-tag, .duration-tag, .bg-gray-200, .bg-gray-300 {
+  background: #e5e7eb !important;
+  color: #222 !important;
+  font-weight: 600;
+}
+.dark .exercise-tag, .dark .reps-tag, .dark .duration-tag, .dark .bg-gray-200, .dark .bg-gray-300 {
+  background: #333646 !important;
+  color: #fff !important;
+}
+
+/* Select exercise modal category tabs */
+.exercise-category-tab, .bg-gray-200 {
+  background: #e5e7eb !important;
+  color: #222 !important;
+}
+.dark .exercise-category-tab, .dark .bg-gray-200 {
+  background: #23262f !important;
+  color: #fff !important;
+  border: 1px solid #444;
+}
+
+/* White background for GIFs in dark mode */
+.gif-white-bg {
+  background: #fff !important;
+  border-radius: 12px;
+  padding: 8px;
+  display: inline-block;
+}
+.dark .gif-white-bg {
+  background: #fff !important;
+}
+
+/* Modal overlay fix */
+.modal-overlay, .fixed.inset-0 {
+  background: rgba(0,0,0,0.7) !important;
+  transition: background 0.5s;
+}
+

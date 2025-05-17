@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Workout from './components/Workout';
 import CreateWorkout from './components/CreateWorkout';
 import EditWorkout from './components/EditWorkout';
+import WorkoutHistory from './components/WorkoutHistory';
 
 const AppRoutes = () => (
   <Routes>
@@ -44,6 +45,7 @@ const AppRoutes = () => (
         </ProtectedRoute>
       }
     />
+    <Route path="/history" element={<WorkoutHistory />} />
     <Route path="/" element={<Navigate to="/dashboard" replace />} />
   </Routes>
 );
