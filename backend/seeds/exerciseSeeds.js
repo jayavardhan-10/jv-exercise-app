@@ -447,5 +447,10 @@ const seedExercises = async () => {
   }
 };
 
-// Run the seed function
-seedExercises();
+// Export the exercises array for direct use in other files
+module.exports = exercises;
+
+// Only run the seed function if this file is executed directly
+if (require.main === module) {
+  seedExercises();
+}

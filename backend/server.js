@@ -27,8 +27,22 @@ console.log('Attempting to connect to MongoDB...');
 const exerciseRoutes = require('./routes/exercises');
 const workoutRoutes = require('./routes/workouts');
 const workoutHistoryRoutes = require('./routes/workoutHistory');
-const exerciseSeeds = require('./seeds/exerciseSeeds');
-const Exercise = require('./models/exercise');
+
+// Import seeds with error handling
+let exerciseSeeds = [];
+let Exercise;
+try {
+  Exercise = require('./models/exercise');
+  try {
+    exerciseSeeds = require('./seeds/exerciseSeeds');
+    console.log('Exercise seeds loaded successfully');
+  } catch (seedError) {
+    console.error('Error loading exercise seeds:', seedError.message);
+    console.log('Will continue without seed data');
+  }
+} catch (modelError) {
+  console.error('Error loading Exercise model:', modelError.message);
+}
 
 async function connectDB() {
     try {
@@ -64,6 +78,14 @@ app.use('/api/workout-history', checkDbConnection, workoutHistoryRoutes);
 // Temporary route to seed exercises (remove after use!)
 app.get('/api/seed-exercises', async (req, res) => {
   try {
+    if (!Exercise) {
+      return res.status(500).send('Exercise model not available');
+    }
+    
+    if (!exerciseSeeds || !Array.isArray(exerciseSeeds) || exerciseSeeds.length === 0) {
+      return res.status(500).send('No seed data available');
+    }
+
     await Exercise.deleteMany({});
     await Exercise.insertMany(exerciseSeeds);
     res.send('Seeded exercises!');
