@@ -27,6 +27,8 @@ console.log('Attempting to connect to MongoDB...');
 const exerciseRoutes = require('./routes/exercises');
 const workoutRoutes = require('./routes/workouts');
 const workoutHistoryRoutes = require('./routes/workoutHistory');
+const exerciseSeeds = require('./seeds/exerciseSeeds');
+const Exercise = require('./models/exercise');
 
 async function connectDB() {
     try {
@@ -58,6 +60,17 @@ const checkDbConnection = (req, res, next) => {
 app.use('/api/exercises', checkDbConnection, exerciseRoutes);
 app.use('/api/workouts', checkDbConnection, workoutRoutes);
 app.use('/api/workout-history', checkDbConnection, workoutHistoryRoutes);
+
+// Temporary route to seed exercises (remove after use!)
+app.get('/api/seed-exercises', async (req, res) => {
+  try {
+    await Exercise.deleteMany({});
+    await Exercise.insertMany(exerciseSeeds);
+    res.send('Seeded exercises!');
+  } catch (err) {
+    res.status(500).send('Seeding failed: ' + err.message);
+  }
+});
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
