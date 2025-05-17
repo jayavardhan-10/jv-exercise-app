@@ -128,6 +128,28 @@ const WorkoutHistory = () => {
                   }}>{date.getDate()}</div>
                 );
               }
+              // Selected day: blue with white text (strong contrast)
+              if (isSelected) {
+                return (
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: '#2563eb',
+                    zIndex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 700,
+                    color: '#fff',
+                    boxShadow: '0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.10)'
+                  }}>{date.getDate()}</div>
+                );
+              }
               // Not today, workout: green heatmap
               if (!isCurrentDay && count > 0) {
                 let bg = '#bbf7d0';
@@ -153,7 +175,7 @@ const WorkoutHistory = () => {
                   </div>
                 );
               }
-              // Selected day: blue with white text (handled by calendar)
+              // Default: normal day
               return null;
             }}
             nextLabel={

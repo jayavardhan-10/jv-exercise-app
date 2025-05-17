@@ -117,6 +117,10 @@ const ExerciseLibrary = ({ onExerciseSelect, isSelectionMode = false }) => {
           </div>
         ))}
       </div>
+
+      {exercises.length === 0 && !loading && (
+        <div className="text-center text-gray-500 py-8">No exercises found. Please check your connection or try again later.</div>
+      )}
     </div>
   );
 };

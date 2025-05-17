@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://jv-exercise-backend.onrender.com/api';
 
 export const workoutHistoryService = {
   // Save a completed workout
