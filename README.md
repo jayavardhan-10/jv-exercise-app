@@ -1,12 +1,83 @@
-# React + Vite
+# Exercise App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack exercise and workout management application built with React, Node.js, and MongoDB.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Exercise library with different categories (Strength, Cardio, Core, Warmup, Stretching)
+- Custom workout creation and management
+- Workout execution with timer functionality
+- Exercise instructions and animated GIFs
+- Workout history tracking
+- User authentication
 
-## Expanding the ESLint configuration
+## Setup Instructions
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB Atlas account or local MongoDB installation
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Update the `.env` file with your MongoDB credentials:
+   ```
+   MONGODB_URI=your_mongodb_connection_string
+   PORT=5000
+   ```
+
+5. Seed the database with exercises:
+   ```bash
+   node seeds/exerciseSeeds.js
+   ```
+
+6. Start the backend server:
+   ```bash
+   npm start
+   ```
+
+### Frontend Setup
+
+1. In the root directory, install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Create environment variables:
+   ```bash
+   echo VITE_API_URL=http://localhost:5000/api > .env
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Tech Stack
+
+- **Frontend**: React, Vite, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB with Mongoose
+- **Authentication**: Firebase Auth (with localStorage fallback)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request

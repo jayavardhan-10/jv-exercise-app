@@ -25,4 +25,18 @@ dist-ssr
 
 .env
 backend/.env
-.env 
+.env
+
+# Local development credentials - NEVER COMMIT
+backend/MONGODB_CREDENTIALS_FOR_LOCAL_TESTING.txt
+**/MONGODB_CREDENTIALS_FOR_LOCAL_TESTING.txt
+
+# Temporary files from git commands - ignore
+ersjayav*
+
+# Private deployment documentation - keep local only
+deployment-chat-summary.md
+deployment-full-chat.md
+*.docx
+whole chat till 23 apr 2025 night.docx
+PART 1 EXERCISE APP PROCESS.docx 
